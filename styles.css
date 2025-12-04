@@ -1,0 +1,467 @@
+/* Layout tổng thể */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: radial-gradient(circle at top left, #e0f2fe, #eef2ff 40%, #f9fafb);
+  color: #111827;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.card {
+  width: 100%;
+  max-width: 1120px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+  overflow: hidden;
+}
+
+/* Header */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  background: linear-gradient(135deg, #1d4ed8, #6366f1);
+  color: #f9fafb;
+}
+
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-wrap img {
+  height: 42px;
+  width: auto;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+}
+
+.logo-text .company {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.logo-text .subtitle {
+  opacity: 0.92;
+}
+
+.header-title {
+  text-align: right;
+}
+
+.header-title h1 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.12em;
+}
+
+.header-title span {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* Tabs */
+.tab-bar {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(to right, #f9fafb, #eef2ff);
+  overflow-x: auto;
+}
+
+.tab-button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px 14px;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  border-bottom: 2px solid transparent;
+  color: #4b5563;
+}
+
+.tab-button:hover {
+  background: rgba(191, 219, 254, 0.4);
+  color: #1d4ed8;
+}
+
+.tab-button.active {
+  border-bottom-color: #4f46e5;
+  color: #1d4ed8;
+  font-weight: 600;
+  background: linear-gradient(to top, #e0ecff, #ffffff);
+}
+
+/* Body & sections */
+.card-body {
+  padding: 18px 20px 20px;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.section-title {
+  margin: 16px 0 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+  border-left: 3px solid #4f46e5;
+  padding-left: 8px;
+}
+
+.section-title.no-margin {
+  margin-top: 0;
+}
+
+/* Form layout */
+.row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.row.compact-row {
+  margin-bottom: 6px;
+}
+
+.field-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+}
+
+.field-group.inline {
+  max-width: 420px;
+}
+
+.field-group label {
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+
+.field-group input,
+.field-group select,
+.field-group textarea {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 6px 9px;
+  font-size: 13px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  background: #f9fafb;
+}
+
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.18);
+  background: #ffffff;
+}
+
+.field-group textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+.help-text {
+  margin-top: 3px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+/* Buttons */
+.actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.primary-btn,
+.secondary-btn {
+  padding: 7px 15px;
+  font-size: 13px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.18s ease;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #ffffff;
+  border-color: #2563eb;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+}
+
+.primary-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1d4ed8, #4338ca);
+  box-shadow: 0 6px 14px rgba(30, 64, 175, 0.3);
+}
+
+.primary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.secondary-btn {
+  background: #f9fafb;
+  color: #111827;
+  border-color: #d1d5db;
+}
+
+.secondary-btn:hover {
+  background: #e5e7eb;
+}
+
+/* Info panel (mail) */
+.info-panel {
+  margin-top: 16px;
+  padding: 12px 12px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(79, 70, 229, 0.12);
+  background: radial-gradient(circle at top left, #eef2ff, #f9fafb 45%, #ffffff);
+}
+
+.info-panel-header {
+  margin-bottom: 8px;
+}
+
+.info-panel-header h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.info-panel-header p {
+  margin: 3px 0 0;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.info-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.info-label {
+  min-width: 130px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.info-value {
+  color: #111827;
+  word-break: break-word;
+}
+
+.mail-body-header {
+  margin-top: 8px;
+}
+
+.mail-body {
+  margin-top: 4px;
+  padding: 8px 9px;
+  font-size: 12px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid rgba(79, 70, 229, 0.18);
+  white-space: pre-line;
+}
+
+/* Lookup (tab 4) */
+.lookup-section {
+  margin-top: 4px;
+}
+
+.lookup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.lookup-controls {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.lookup-tip {
+  font-size: 11px;
+  color: #4b5563;
+  opacity: 0.9;
+}
+
+.table-wrapper {
+  margin-top: 10px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  background: #ffffff;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+/* Scrollbar nhẹ */
+.table-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #c7d2fe;
+  border-radius: 999px;
+}
+.table-wrapper::-webkit-scrollbar-track {
+  background: #f3f4ff;
+}
+
+.lookup-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.lookup-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.lookup-table th {
+  text-align: left;
+  padding: 8px 10px;
+  background: linear-gradient(to right, #e0f2fe, #e0e7ff);
+  border-bottom: 1px solid #e5e7eb;
+  font-weight: 600;
+  color: #1f2937;
+  position: relative;
+}
+
+.lookup-table th:first-child::before {
+  content: 'KV';
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  font-size: 9px;
+  color: rgba(37, 99, 235, 0.7);
+  text-transform: uppercase;
+}
+
+.lookup-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+/* Nhấn nhẹ từng dòng */
+.lookup-table tr:nth-child(even) td {
+  background: #f9fafb;
+}
+
+.lookup-table tr:hover td {
+  background: #e0ecff;
+}
+
+/* Badge nhỏ cho khu vực (cột 1) */
+.lookup-table td:first-child {
+  font-weight: 500;
+  color: #1d4ed8;
+}
+
+/* Placeholder */
+.table-placeholder {
+  text-align: left;
+  color: #6b7280;
+}
+
+.lookup-footnote {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    max-width: 100%;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .header-title {
+    text-align: left;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .lookup-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+/* Nới khoảng cách dọc cho Thông tin gửi mail */
+.info-row {
+  align-items: flex-start; /* label và nội dung không bị dính sát nhau */
+  margin-bottom: 8px; /* tăng khoảng cách giữa các dòng */
+}
+
+.info-panel .info-row:last-of-type {
+  margin-bottom: 6px; /* dòng cuối cùng vẫn có chút spacing */
+}
+
+.info-label {
+  padding-top: 2px; /* label cân giữa so với nội dung nhiều dòng */
+}
+
+.info-value,
+.mail-body {
+  line-height: 1.5; /* tăng line-height cho chữ đỡ dày */
+}
+
+.mail-body {
+  padding: 10px 11px; /* padding dày hơn một chút */
+}

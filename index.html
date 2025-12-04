@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Biểu mẫu khiếu nại MobiFone</title>
+
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Thư viện tạo Word -->
+    <script src="https://unpkg.com/pizzip@3.1.1/dist/pizzip.min.js"></script>
+    <script src="https://unpkg.com/docxtemplater@3.37.9/build/docxtemplater.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <!-- Thư viện đọc Excel cho tab 4 -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  </head>
+
+  <body>
+    <div class="page">
+      <div class="card">
+        <!-- HEADER -->
+        <div class="card-header">
+          <div class="logo-wrap">
+            <img src="mobifone-logo.png" alt="MobiFone logo" />
+            <div class="logo-text">
+              <span class="company">MobiFone</span>
+              <span class="subtitle">Đơn vị / Trung tâm CSKH</span>
+            </div>
+          </div>
+          <div class="header-title">
+            <h1>BIỂU MẪU KHIẾU NẠI</h1>
+            <span>Dùng cho nội bộ MobiFone</span>
+          </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tab-bar">
+          <button class="tab-button active" data-tab="tab-gtgt">Phiếu KN Đơn DV GTGT</button>
+          <button class="tab-button" data-tab="tab-bnkn">Phụ lục 1 - BNKN</button>
+          <button class="tab-button" data-tab="tab-pl2">Phụ lục 2 - KN KDVT</button>
+          <button class="tab-button" data-tab="tab-ds">Danh sách phường/xã</button>
+        </div>
+
+        <div class="card-body">
+          <!-- TAB 1: GTGT -->
+          <div class="tab-content active" id="tab-gtgt">
+            <form id="wordForm">
+              <!-- Văn bản -->
+              <h2 class="section-title">Thông tin văn bản</h2>
+              <div class="row">
+                <div class="field-group" style="flex: 2">
+                  <label>Số công văn:</label>
+                  <input type="number" name="SoCV" required />
+                  <div class="help-text">Ví dụ: 1234</div>
+                </div>
+                <div class="field-group">
+                  <label>Ngày văn bản:</label>
+                  <input type="date" id="NgayFull_GTGT" name="NgayFull_GTGT" required />
+                  <div class="help-text">Mặc định là ngày hiện tại, có thể chỉnh lại.</div>
+                </div>
+              </div>
+
+              <!-- KH -->
+              <h2 class="section-title">Thông tin khách hàng</h2>
+              <div class="row">
+                <div class="field-group">
+                  <label>Họ tên người khiếu nại:</label>
+                  <input type="text" name="HO_TEN" required />
+                </div>
+                <div class="field-group">
+                  <label>Số thuê bao:</label>
+                  <input type="number" name="SO_THUE_BAO" required />
+                  <div class="help-text">Phải đủ 9 số, không có số 0 ở đầu (VD: 903xxxxxx).</div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="field-group">
+                  <label>Địa chỉ:</label>
+                  <input type="text" name="DIA_CHI" required />
+                </div>
+                <div class="field-group">
+                  <label>CCCD/CMND khách hàng (có thể để trống):</label>
+                  <input type="text" name="CCCD" />
+                </div>
+              </div>
+
+              <!-- DV -->
+              <h2 class="section-title">Dịch vụ khiếu nại</h2>
+              <div class="row">
+                <div class="field-group">
+                  <label>Tên nhóm dịch vụ:</label>
+                  <input type="text" name="TEN_NHOM_DV" required />
+                </div>
+                <div class="field-group">
+                  <label>Tên gói dịch vụ:</label>
+                  <input type="text" name="TEN_GOI" required />
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label>Nội dung DTV ghi nhận:</label>
+                <textarea name="NOI_DUNG_DTV" required></textarea>
+              </div>
+
+              <div class="field-group">
+                <label>Kết quả MDS kiểm tra:</label>
+                <textarea name="KQ_MDS" required></textarea>
+              </div>
+
+              <!-- ĐK / Hủy -->
+              <h2 class="section-title">Đăng ký / Hủy dịch vụ</h2>
+              <div class="row">
+                <div class="field-group">
+                  <label>Ngày đăng ký:</label>
+                  <input type="text" name="NGAY_DK" required />
+                </div>
+                <div class="field-group">
+                  <label>Ngày hủy:</label>
+                  <input type="text" name="NGAY_HUY" required />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="field-group">
+                  <label>Nguồn đăng ký:</label>
+                  <input type="text" name="NGUON_DK" required />
+                </div>
+                <div class="field-group">
+                  <label>Nguồn hủy:</label>
+                  <input type="text" name="NGUON_HUY" required />
+                </div>
+              </div>
+
+              <!-- Cước & CN -->
+              <h2 class="section-title">Cước và đơn vị xử lý</h2>
+              <div class="row">
+                <div class="field-group">
+                  <label>Cước tạm tính:</label>
+                  <input type="text" name="CUOC_TAM" required />
+                </div>
+                <div class="field-group">
+                  <label>Tên chi nhánh xử lý:</label>
+                  <select name="TEN_CN" id="TenChiNhanh_GTGT" required>
+                    <option value="">-- Chọn chi nhánh --</option>
+                    <option value="Sài Gòn">Sài Gòn</option>
+                    <option value="Gia Định">Gia Định</option>
+                    <option value="Bến Thành">Bến Thành</option>
+                    <option value="Gò Vấp">Gò Vấp</option>
+                    <option value="Thủ Đức">Thủ Đức</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Dịch vụ GTGT -->
+              <h2 class="section-title">Dịch vụ GTGT</h2>
+              <div class="field-group">
+                <label>Dịch vụ GTGT:</label>
+                <select name="DICH_VU_GTGT" id="DichVuGTGT" required>
+                  <option value="">-- Chọn dịch vụ GTGT --</option>
+                  <option value="MobiAI">MobiAI</option>
+                  <option value="MobiPA">MobiPA</option>
+                  <option value="Saymee">Saymee</option>
+                  <option value="iCall">iCall</option>
+                  <option value="MobiGames">MobiGames</option>
+                  <option value="MobiOn">MobiOn</option>
+                  <option value="MobiEdu">MobiEdu</option>
+                  <option value="MobiAgri">MobiAgri</option>
+                  <option value="Trở thành triệu phú">Trở thành triệu phú</option>
+                  <option value="Cổng Thông tin Giải trí Việt _My Foto (9050)">
+                    Cổng Thông tin Giải trí Việt _My Foto (9050)
+                  </option>
+                  <option value="Mobi Radio">Mobi Radio</option>
+                  <option value="Quà tặng âm nhạc">Quà tặng âm nhạc</option>
+                  <option value="iBolero">iBolero</option>
+                </select>
+              </div>
+
+              <!-- MAIL GTGT -->
+              <div class="info-panel">
+                <div class="info-panel-header">
+                  <h3>Thông tin gửi mail</h3>
+                </div>
+
+                <div class="row compact-row">
+                  <div class="field-group">
+                    <label>Loại thuê bao:</label>
+                    <select name="LOAI_TB" id="LoaiThueBao_GTGT" required>
+                      <option value="">-- Chọn loại thuê bao --</option>
+                      <option value="KHCN">KHCN</option>
+                      <option value="KHDN">KHDN</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="info-row">
+                  <span class="info-label">Email chi nhánh:</span>
+                  <span class="info-value" id="EmailChiNhanh_GTGT">-</span>
+                </div>
+
+                <div class="info-row">
+                  <span class="info-label">Email / NV phụ trách DV GTGT:</span>
+                  <span class="info-value" id="EmailGTGT_GTGT">-</span>
+                </div>
+
+                <div class="info-row">
+                  <span class="info-label">Subject:</span>
+                  <span class="info-value" id="EmailSubject_GTGT">-</span>
+                </div>
+
+                <div class="info-row mail-body-header">
+                  <span class="info-label">Nội dung mail:</span>
+                  <button
+                    type="button"
+                    class="secondary-btn"
+                    onclick="copyEmailBody('EmailBody_GTGT')">
+                    Copy nội dung
+                  </button>
+                </div>
+
+                <div class="mail-body" id="EmailBody_GTGT">-</div>
+              </div>
+
+              <div class="actions">
+                <button type="button" class="secondary-btn" onclick="resetGTGTForm();">
+                  Xóa form
+                </button>
+                <button type="submit" class="primary-btn">Xuất file Word</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- TAB 2: PHỤ LỤC 1 BNKN -->
+          <div class="tab-content" id="tab-bnkn">
+            <form id="bnknForm">
+              <h2 class="section-title">Thông tin văn bản</h2>
+              <div class="row">
+                <div class="field-group" style="flex: 2">
+                  <label>Số công văn:</label>
+                  <input type="number" name="SoCV" required />
+                  <div class="help-text">Ví dụ: 1234</div>
+                </div>
+
+                <div class="field-group">
+                  <label>Ngày văn bản:</label>
+                  <input type="date" id="NgayFull_BNKN" name="NgayFull_BNKN" required />
+                </div>
+              </div>
+
+              <h2 class="section-title">Thông tin khiếu nại</h2>
+
+              <div class="row">
+                <div class="field-group">
+                  <label>Họ tên người khiếu nại:</label>
+                  <input type="text" name="HO_TEN_KN" required />
+                </div>
+
+                <div class="field-group">
+                  <label>CMND/CCCD (có thể để trống):</label>
+                  <input type="text" name="CCCD" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="field-group">
+                  <label>Tên khách hàng:</label>
+                  <input type="text" name="HO_TEN_KH" required />
+                </div>
+
+                <div class="field-group">
+                  <label>Số thuê bao:</label>
+                  <input type="number" name="SO_THUE_BAO" required />
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label>Địa chỉ:</label>
+                <input type="text" name="DIA_CHI" required />
+              </div>
+
+              <div class="field-group">
+                <label>Số điện thoại liên hệ:</label>
+                <input type="text" name="SO_LIEN_HE" required />
+              </div>
+
+              <div class="field-group">
+                <label>Nội dung khách hàng phản ánh:</label>
+                <textarea name="NOI_DUNG_KHIEU_NAI" required></textarea>
+              </div>
+
+              <div class="field-group">
+                <label>Giấy tờ / Kết quả trả lời kèm theo:</label>
+                <textarea name="KQ_TRA_LOI" required></textarea>
+              </div>
+
+              <!-- MAIL BNKN -->
+              <div class="info-panel">
+                <div class="info-panel-header">
+                  <h3>Thông tin gửi mail</h3>
+                </div>
+
+                <div class="row compact-row">
+                  <div class="field-group">
+                    <label>Chi nhánh xử lý:</label>
+                    <select id="TenChiNhanh_BNKN" name="TEN_CN_BNKN">
+                      <option value="">-- Chọn chi nhánh --</option>
+                      <option value="Sài Gòn">Sài Gòn</option>
+                      <option value="Gia Định">Gia Định</option>
+                      <option value="Bến Thành">Bến Thành</option>
+                      <option value="Gò Vấp">Gò Vấp</option>
+                      <option value="Thủ Đức">Thủ Đức</option>
+                    </select>
+                  </div>
+                  <div class="field-group">
+                    <label>Loại thuê bao:</label>
+                    <select id="LoaiThueBao_BNKN" name="LOAI_TB_BNKN">
+                      <option value="">-- Chọn loại thuê bao --</option>
+                      <option value="KHCN">KHCN</option>
+                      <option value="KHDN">KHDN</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="info-row">
+                  <span class="info-label">Email chi nhánh:</span>
+                  <span class="info-value" id="EmailChiNhanh_BNKN">-</span>
+                </div>
+
+                <div class="field-group">
+                  <label>Tên gói (dùng trong subject mail):</label>
+                  <input type="text" id="TenGoi_BNKN" />
+                </div>
+
+                <div class="info-row">
+                  <span class="info-label">Subject:</span>
+                  <span class="info-value" id="EmailSubject_BNKN">-</span>
+                </div>
+
+                <div class="info-row mail-body-header">
+                  <span class="info-label">Nội dung mail:</span>
+                  <button
+                    type="button"
+                    class="secondary-btn"
+                    onclick="copyEmailBody('EmailBody_BNKN')">
+                    Copy nội dung
+                  </button>
+                </div>
+
+                <div class="mail-body" id="EmailBody_BNKN">-</div>
+              </div>
+
+              <div class="actions">
+                <button type="button" class="secondary-btn" onclick="resetBNKNForm();">
+                  Xóa form
+                </button>
+                <button type="submit" class="primary-btn">Xuất file Word</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- TAB 3: PHỤ LỤC 2 -->
+          <div class="tab-content" id="tab-pl2">
+            <form id="pl2Form">
+              <h2 class="section-title">Thông tin văn bản</h2>
+              <div class="row">
+                <div class="field-group" style="flex: 2">
+                  <label>Số công văn:</label>
+                  <input type="number" name="SoCV" required />
+                  <div class="help-text">Ví dụ: 1234</div>
+                </div>
+                <div class="field-group">
+                  <label>Ngày văn bản:</label>
+                  <input type="date" id="NgayFull_PL2" name="NgayFull_PL2" required />
+                </div>
+              </div>
+
+              <h2 class="section-title">Thông tin khiếu nại</h2>
+
+              <div class="row">
+                <div class="field-group">
+                  <label>Họ tên người khiếu nại:</label>
+                  <input type="text" name="HO_TEN_KN" required />
+                </div>
+                <div class="field-group">
+                  <label>CMND/CCCD người KN (có thể để trống):</label>
+                  <input type="text" name="CCCD_KN" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="field-group">
+                  <label>Tên khách hàng:</label>
+                  <input type="text" name="HO_TEN_KH" required />
+                </div>
+                <div class="field-group">
+                  <label>CMND/CCCD khách hàng (có thể để trống):</label>
+                  <input type="text" name="CCCD_KH" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="field-group">
+                  <label>Số thuê bao KH:</label>
+                  <input type="number" name="SO_THUE_BAO_KH" required />
+                  <div class="help-text">Phải đủ 9 số, không có số 0 ở đầu (VD: 903xxxxxx).</div>
+                </div>
+                <div class="field-group">
+                  <label>Số điện thoại liên hệ:</label>
+                  <input type="number" name="SO_THUE_BAO_LH" required />
+                  <div class="help-text">Phải đủ 9 số, không có số 0 ở đầu (VD: 903xxxxxx).</div>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label>Địa chỉ:</label>
+                <input type="text" name="DIA_CHI" required />
+              </div>
+
+              <div class="field-group">
+                <label>Khiếu nại về việc:</label>
+                <textarea name="NOI_DUNG_KN" required></textarea>
+              </div>
+
+              <div class="field-group">
+                <label>Điện thoại viên đã giải thích:</label>
+                <textarea name="KQ_XLV" required></textarea>
+              </div>
+
+              <!-- MAIL PL2 -->
+              <div class="info-panel">
+                <div class="info-panel-header">
+                  <h3>Thông tin gửi mail (Phụ lục 2)</h3>
+                  <p>
+                    Subject: <code>CV {"{SoCV}"} - {"{SO_THUE_BAO_KH}"} - {"{TenGoi}"}</code><br />
+                    Nội dung mail cố định, bạn chỉ cần nhập số CV + tên gói.
+                  </p>
+                </div>
+
+                <div class="row compact-row">
+                  <div class="field-group">
+                    <label>Chi nhánh xử lý:</label>
+                    <select id="TenChiNhanh_PL2" name="TEN_CN_PL2">
+                      <option value="">-- Chọn chi nhánh --</option>
+                      <option value="Sài Gòn">Sài Gòn</option>
+                      <option value="Gia Định">Gia Định</option>
+                      <option value="Bến Thành">Bến Thành</option>
+                      <option value="Gò Vấp">Gò Vấp</option>
+                      <option value="Thủ Đức">Thủ Đức</option>
+                    </select>
+                  </div>
+                  <div class="field-group">
+                    <label>Loại thuê bao:</label>
+                    <select id="LoaiThueBao_PL2" name="LOAI_TB_PL2">
+                      <option value="">-- Chọn loại thuê bao --</option>
+                      <option value="KHCN">KHCN</option>
+                      <option value="KHDN">KHDN</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="info-row">
+                  <span class="info-label">Email chi nhánh:</span>
+                  <span class="info-value" id="EmailChiNhanh_PL2">-</span>
+                </div>
+
+                <div class="field-group">
+                  <label>Tên gói (dùng trong subject mail):</label>
+                  <input type="text" id="TenGoi_PL2" />
+                </div>
+
+                <div class="info-row">
+                  <span class="info-label">Subject:</span>
+                  <span class="info-value" id="EmailSubject_PL2">-</span>
+                </div>
+
+                <div class="info-row mail-body-header">
+                  <span class="info-label">Nội dung mail:</span>
+                  <button
+                    type="button"
+                    class="secondary-btn"
+                    onclick="copyEmailBody('EmailBody_PL2')">
+                    Copy nội dung
+                  </button>
+                </div>
+
+                <div class="mail-body" id="EmailBody_PL2">-</div>
+              </div>
+
+              <div class="actions">
+                <button type="button" class="secondary-btn" onclick="resetPL2Form();">
+                  Xóa form
+                </button>
+                <button type="submit" class="primary-btn">Xuất file Word</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- TAB 4: DANH SÁCH PHƯỜNG/XÃ -->
+          <div class="tab-content" id="tab-ds">
+            <section class="lookup-section">
+              <div class="lookup-header">
+                <div>
+                  <h2 class="section-title no-margin">Danh sách phường/xã theo khu vực</h2>
+                  <p class="help-text">
+                    Dữ liệu đọc từ file
+                    <strong>danh_sach_phuong_xa.xlsx</strong> đặt cùng thư mục với
+                    <strong>index.html</strong>. Dùng để tra nhanh chi nhánh phù hợp.
+                  </p>
+                </div>
+              </div>
+
+              <div class="lookup-controls">
+                <div class="field-group inline">
+                  <label>Tìm kiếm nhanh:</label>
+                  <input
+                    type="text"
+                    id="searchPhuong"
+                    placeholder="Nhập tên khu vực / quận / phường..."
+                    oninput="filterPhuongXa()" />
+                </div>
+                <div class="lookup-tip">
+                  Gợi ý: gõ <strong>Gò Vấp</strong>, <strong>Thủ Đức</strong>, tên phường, hoặc từ
+                  khóa bất kỳ.
+                </div>
+              </div>
+
+              <div class="table-wrapper">
+                <table class="lookup-table">
+                  <thead>
+                    <tr>
+                      <th>Khu vực / Chi nhánh</th>
+                      <th>Quận / Huyện cũ</th>
+                      <th>Xã / Phường mới</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbodyPhuongXa">
+                    <tr>
+                      <td colspan="3" class="table-placeholder">
+                        Đang tải dữ liệu từ file Excel...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <p class="lookup-footnote">
+                * Lưu ý: Cột tên trong Excel cần đúng tiêu đề:
+                <code>Khu vực</code>, <code>Quận/Huyện cũ</code>, <code>Xã/Phường mới</code>.
+              </p>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Config & Logic -->
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
