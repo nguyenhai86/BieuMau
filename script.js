@@ -508,7 +508,7 @@ function updateMailPL2() {
   const subjEl = document.getElementById('EmailSubject_PL2');
   const bodyEl = document.getElementById('EmailBody_PL2');
 
-  const prefix = 'Hỗ trợ KN'; // ← chỉnh chữ này cho đúng format bạn muốn
+  const prefix = 'Hỗ trợ BNKN'; // ← chỉnh chữ này cho đúng format bạn muốn
 
   if (soCV && soTB && tenGoi) {
     subjEl.textContent = `${prefix} ${soCV} - ${soTB} - ${tenGoi}`;
