@@ -427,7 +427,7 @@ function initBNKNForm() {
         mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
       });
 
-      saveAs(out, `BNKN_${data.SoCV}_${data.SO_THUE_BAO}.docx`);
+      saveAs(out, `BNKN ${data.SoCV}_${data.SO_THUE_BAO}.docx`);
     });
   });
 }
