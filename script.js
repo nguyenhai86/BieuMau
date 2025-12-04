@@ -343,8 +343,6 @@ function validateBNKNForm(fd, formElement) {
 }
 
 function updateMailBNKN() {
-  // Lấy đúng theo yêu cầu:
-  // CV {SoCV} - {SO_THUE_BAO} - {TenGoi}
   const soCV = document.querySelector('#tab-bnkn [name="SoCV"]').value.trim();
   const soTB = document.querySelector('#tab-bnkn [name="SO_THUE_BAO"]').value.trim();
   const tenGoi = document.getElementById('TenGoi_BNKN').value.trim();
@@ -352,22 +350,22 @@ function updateMailBNKN() {
   const subjEl = document.getElementById('EmailSubject_BNKN');
   const bodyEl = document.getElementById('EmailBody_BNKN');
 
-  // Subject
+  const prefix = 'Hỗ trợ BNKN'; // ← muốn đổi chữ gì thì sửa ở đây
+
   if (soCV && soTB && tenGoi) {
-    subjEl.textContent = `CV ${soCV} - ${soTB} - ${tenGoi}`;
+    subjEl.textContent = `${prefix} ${soCV} - ${soTB} - ${tenGoi}`;
   } else if (soCV && soTB) {
-    // Nếu chưa nhập Tên gói thì vẫn hiển thị 2 phần đầu, để bạn dễ nhìn
-    subjEl.textContent = `CV ${soCV} - ${soTB} - ...`;
+    subjEl.textContent = `${prefix} ${soCV} - ${soTB} - ...`;
   } else if (soCV) {
-    subjEl.textContent = `CV ${soCV} - ...`;
+    subjEl.textContent = `${prefix} ${soCV} - ...`;
   } else {
     subjEl.textContent = '-';
   }
 
-  // Body: cố định theo yêu cầu
   if (soCV) {
     bodyEl.textContent = `Dear Anh Chị,
-Em gửi Anh Chị BNKN ${soCV}. Nhờ Anh Chị hỗ trợ giúp. Em cảm ơn`;
+Em gửi Anh Chị BNKN ${soCV}. Nhờ Anh Chị hỗ trợ giúp.
+Em cảm ơn`;
   } else {
     bodyEl.textContent = '-';
   }
@@ -499,8 +497,6 @@ function validatePL2Form(fd, formElement) {
 }
 
 function updateMailPL2() {
-  // Yêu cầu:
-  // CV {SoCV} - {SO_THUE_BAO_KH} - {TenGoi}
   const soCV = document.querySelector('#tab-pl2 [name="SoCV"]').value.trim();
   const soTB = document.querySelector('#tab-pl2 [name="SO_THUE_BAO_KH"]').value.trim();
   const tenGoi = document.getElementById('TenGoi_PL2').value.trim();
@@ -508,21 +504,22 @@ function updateMailPL2() {
   const subjEl = document.getElementById('EmailSubject_PL2');
   const bodyEl = document.getElementById('EmailBody_PL2');
 
-  // Subject
+  const prefix = 'Hỗ trợ KN'; // ← chỉnh chữ này cho đúng format bạn muốn
+
   if (soCV && soTB && tenGoi) {
-    subjEl.textContent = `CV ${soCV} - ${soTB} - ${tenGoi}`;
+    subjEl.textContent = `${prefix} ${soCV} - ${soTB} - ${tenGoi}`;
   } else if (soCV && soTB) {
-    subjEl.textContent = `CV ${soCV} - ${soTB} - ...`;
+    subjEl.textContent = `${prefix} ${soCV} - ${soTB} - ...`;
   } else if (soCV) {
-    subjEl.textContent = `CV ${soCV} - ...`;
+    subjEl.textContent = `${prefix} ${soCV} - ...`;
   } else {
     subjEl.textContent = '-';
   }
 
-  // Body
   if (soCV) {
     bodyEl.textContent = `Dear Anh Chị,
-Em gửi Anh Chị BNKN ${soCV}. Nhờ Anh Chị hỗ trợ giúp. Em cảm ơn`;
+Em gửi Anh Chị BNKN ${soCV}. Nhờ Anh Chị hỗ trợ giúp.
+Em cảm ơn`;
   } else {
     bodyEl.textContent = '-';
   }
@@ -580,7 +577,7 @@ function initPL2Form() {
         mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
       });
 
-      saveAs(out, `PL2_${data.SoCV}_${data.SO_THUE_BAO_KH}.docx`);
+      saveAs(out, `BNKN ${data.SoCV}_${data.SO_THUE_BAO_KH}.docx`);
     });
   });
 }

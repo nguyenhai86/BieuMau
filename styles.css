@@ -47,8 +47,9 @@ body {
 }
 
 .logo-wrap img {
-  height: 42px;
+  height: 70px; /* logo lớn hơn */
   width: auto;
+  transform: translateY(2px);
 }
 
 .logo-text {
