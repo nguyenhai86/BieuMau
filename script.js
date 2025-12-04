@@ -306,7 +306,9 @@ function resetMailPanelBNKN() {
 
 function validateBNKNForm(fd, formElement) {
   for (const [key, value] of fd.entries()) {
-    if (key === 'CCCD') continue;
+    // 2 trường CCCD được phép bỏ trống
+    if (key === 'CCCD_KN' || key === 'CCCD_KH') continue;
+
     if (!value.trim()) {
       const fieldEl = formElement.querySelector(`[name="${key}"]`);
       const labelEl = fieldEl ? fieldEl.closest('.field-group')?.querySelector('label') : null;
@@ -317,6 +319,7 @@ function validateBNKNForm(fd, formElement) {
     }
   }
 
+  // Validate số thuê bao
   const soThueBaoEl = formElement.querySelector('[name="SO_THUE_BAO"]');
   if (soThueBaoEl) {
     const v = soThueBaoEl.value.trim();
@@ -329,6 +332,7 @@ function validateBNKNForm(fd, formElement) {
     }
   }
 
+  // Validate số công văn
   const soCVEl = formElement.querySelector('[name="SoCV"]');
   if (soCVEl) {
     const cvValue = soCVEl.value.trim();
