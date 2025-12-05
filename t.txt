@@ -1,8 +1,0 @@
-Tôi muốn cả 3 tab đều có phần Thông tin gửi mail. 2 tab phụ lục 1 và 2 sẽ không có Email / NV phụ trách DV GTGT.
-Email chi nhánh sẽ lấy từ dữ liệu  có của tab GTGT
-
-Cả 3 tab đều có Dropdown để chọn chi nhánh và loại thuê bao ( KHDN, KHCN)  --> Phục vụ cho phần Thông tin gửi mail
-
-Về subject BNKN Phụ lục 1 là CV {SoCV} - {SO_THUE_BAO} - TenGoi ( Chỗ tên gói này là text tôi sẽ điền sau )
-
-Về subject BNKN Phụ lục 2 là CV {SoCV} - {SO_THUE_BAO_KH} - TenGoi ( Chỗ tên gói này là text tôi sẽ điền sau )

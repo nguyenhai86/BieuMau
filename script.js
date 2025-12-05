@@ -594,6 +594,52 @@ function resetPL2Form() {
   resetMailPanelPL2();
 }
 
+// ==== HỖ TRỢ TÌM KIẾM KHÔNG DẤU TAB 4 ====
+// Bỏ dấu tiếng Việt + đưa về chữ thường
+function normalizeVN(str) {
+  if (!str) return '';
+  return str
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // bỏ dấu
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'd')
+    .toLowerCase()
+    .trim();
+}
+
+// Lưu dữ liệu phường/xã để tìm kiếm & sort
+let PHUONG_XA_DATA = [];
+
+// Tính điểm giống nhau giữa 1 dòng và chuỗi tìm kiếm
+function scorePhuongXaRow(item, queryNorm, tokens) {
+  if (!queryNorm) return 0;
+
+  let score = 0;
+  const fields = [item.normKV, item.normQH, item.normXP];
+
+  // So khớp toàn chuỗi
+  if (item.normAll === queryNorm) score += 80;
+  else if (item.normAll.startsWith(queryNorm)) score += 60;
+  else if (item.normAll.includes(queryNorm)) score += 30;
+
+  // So khớp theo từng từ
+  tokens.forEach((t) => {
+    fields.forEach((f, idx) => {
+      if (!f || !t) return;
+      let weight = 1;
+      // Ưu tiên Khu vực một chút
+      if (idx === 0) weight = 1.3;
+
+      if (f === t) score += 25 * weight;
+      else if (f.startsWith(t)) score += 15 * weight;
+      else if (f.includes(t)) score += 8 * weight;
+    });
+  });
+
+  return score;
+}
+
 // ==== TAB 4: DANH SÁCH PHƯỜNG/XÃ ====
 function loadDanhSachPhuongXa() {
   const tbody = document.getElementById('tbodyPhuongXa');
@@ -616,8 +662,9 @@ function loadDanhSachPhuongXa() {
       const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
 
       tbody.innerHTML = '';
+      PHUONG_XA_DATA = [];
 
-      rows.forEach((row) => {
+      rows.forEach((row, index) => {
         const kv = row['Khu vực'] || '';
         const qh = row['Quận/Huyện cũ'] || '';
         const xp = row['Xã/Phường mới'] || '';
@@ -625,6 +672,24 @@ function loadDanhSachPhuongXa() {
         const tr = document.createElement('tr');
         tr.innerHTML = `<td>${kv}</td><td>${qh}</td><td>${xp}</td>`;
         tbody.appendChild(tr);
+
+        const normKV = normalizeVN(kv);
+        const normQH = normalizeVN(qh);
+        const normXP = normalizeVN(xp);
+        const normAll = normalizeVN(`${kv} ${qh} ${xp}`);
+
+        PHUONG_XA_DATA.push({
+          index,
+          kv,
+          qh,
+          xp,
+          tr,
+          normKV,
+          normQH,
+          normXP,
+          normAll,
+          _score: 0
+        });
       });
 
       if (!rows.length) {
@@ -643,13 +708,46 @@ function filterPhuongXa() {
   const input = document.getElementById('searchPhuong');
   if (!input) return;
 
-  const filter = input.value.toLowerCase();
+  const queryRaw = input.value || '';
+  const queryNorm = normalizeVN(queryRaw);
   const tbody = document.getElementById('tbodyPhuongXa');
-  if (!tbody) return;
+  if (!tbody || !PHUONG_XA_DATA.length) return;
 
-  const rows = tbody.getElementsByTagName('tr');
-  Array.from(rows).forEach((row) => {
-    const text = row.textContent.toLowerCase();
-    row.style.display = text.includes(filter) ? '' : 'none';
+  // Nếu không nhập gì -> trả về thứ tự gốc
+  if (!queryNorm) {
+    tbody.innerHTML = '';
+    PHUONG_XA_DATA.slice() // copy
+      .sort((a, b) => a.index - b.index)
+      .forEach((item) => {
+        tbody.appendChild(item.tr);
+      });
+    return;
+  }
+
+  const tokens = queryNorm.split(/\s+/).filter(Boolean);
+
+  // Tính điểm & lọc những dòng có match
+  const matched = PHUONG_XA_DATA.filter((item) => {
+    const s = scorePhuongXaRow(item, queryNorm, tokens);
+    item._score = s;
+    return s > 0;
   });
+
+  tbody.innerHTML = '';
+
+  if (!matched.length) {
+    tbody.innerHTML =
+      '<tr><td colspan="3" class="table-placeholder">Không tìm thấy kết quả phù hợp.</td></tr>';
+    return;
+  }
+
+  // Sort: điểm cao nhất đứng đầu, nếu bằng nhau thì giữ theo thứ tự gốc
+  matched
+    .sort((a, b) => {
+      if (b._score !== a._score) return b._score - a._score;
+      return a.index - b.index;
+    })
+    .forEach((item) => {
+      tbody.appendChild(item.tr);
+    });
 }
