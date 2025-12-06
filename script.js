@@ -14,6 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // clear highlight khi user sửa lại
+  document.addEventListener('input', (e) => {
+    const fg = e.target.closest('.field-group.field-error');
+    if (fg) fg.classList.remove('field-error');
+  });
+
   // Ngày mặc định
   setTodayById('NgayFull_GTGT');
   setTodayById('NgayFull_BNKN');
@@ -50,6 +56,14 @@ function updateBranchEmailFor(tabSuffix) {
   } else {
     emailEl.textContent = '-';
   }
+}
+
+// clear lỗi trực quan
+function clearFormErrors(formElement) {
+  if (!formElement) return;
+  formElement
+    .querySelectorAll('.field-group.field-error')
+    .forEach((fg) => fg.classList.remove('field-error'));
 }
 
 // Sync CN + Loại thuê bao từ tab GTGT sang BNKN & PL2 (nếu đang trống)
@@ -89,16 +103,39 @@ function copyEmailBody(elementId) {
     .catch(() => alert('Không copy được nội dung mail, vui lòng thử lại.'));
 }
 
-// Helper disable/enable nút submit
+// Helper disable/enable nút submit + overlay tiến trình
 function withSubmitLock(form, callback) {
   const btn = form.querySelector('button[type="submit"]');
+  const overlay = document.getElementById('progressOverlay');
+  const msgEl = document.getElementById('progressMessage');
+
+  const showOverlay = (message) => {
+    if (!overlay) return;
+    if (msgEl && message) msgEl.textContent = message;
+    overlay.classList.add('visible');
+  };
+
+  const hideOverlay = () => {
+    if (!overlay) return;
+    overlay.classList.remove('visible');
+  };
+
   if (!btn) {
-    callback().catch((err) => console.error(err));
+    showOverlay('Đang tạo file Word, vui lòng chờ...');
+    callback()
+      .catch((err) => {
+        console.error(err);
+        alert('Có lỗi xảy ra khi tạo file. Vui lòng kiểm tra lại.');
+      })
+      .finally(() => hideOverlay());
     return;
   }
+
   const originalText = btn.textContent;
   btn.disabled = true;
   btn.textContent = 'Đang tạo file...';
+
+  showOverlay('Đang tạo file Word, vui lòng chờ...');
 
   callback()
     .catch((err) => {
@@ -108,10 +145,11 @@ function withSubmitLock(form, callback) {
     .finally(() => {
       btn.disabled = false;
       btn.textContent = originalText;
+      hideOverlay();
     });
 }
 
-// ==== TAB 1: GTGT ====
+// ===== TAB 1: GTGT =====
 // Subject + body GTGT
 function updateSubjectGTGT() {
   const soCV = document.querySelector('#tab-gtgt [name="SoCV"]').value.trim();
@@ -170,6 +208,8 @@ function resetMailPanelGTGT() {
 }
 
 function validateGTGTForm(formData, formElement) {
+  clearFormErrors(formElement);
+
   for (const [key, value] of formData.entries()) {
     if (key === 'CCCD') continue;
     const trimmed = value.trim();
@@ -177,6 +217,8 @@ function validateGTGTForm(formData, formElement) {
     if (!trimmed) {
       const labelEl = fieldEl ? fieldEl.closest('.field-group')?.querySelector('label') : null;
       const labelText = labelEl ? labelEl.innerText.replace(/[:*]/g, '').trim() : key;
+      const group = fieldEl ? fieldEl.closest('.field-group') : null;
+      if (group) group.classList.add('field-error');
       alert('Vui lòng nhập đầy đủ thông tin: ' + labelText);
       if (fieldEl) fieldEl.focus();
       return false;
@@ -189,6 +231,8 @@ function validateGTGTForm(formData, formElement) {
     const is9 = /^\d{9}$/.test(v);
     const zero = v.startsWith('0');
     if (!is9 || zero) {
+      const group = soThueBaoEl.closest('.field-group');
+      if (group) group.classList.add('field-error');
       alert('Số thuê bao phải gồm đúng 9 chữ số và không bắt đầu bằng số 0 (VD: 903xxxxxx).');
       soThueBaoEl.focus();
       return false;
@@ -199,6 +243,8 @@ function validateGTGTForm(formData, formElement) {
   if (soCVEl) {
     const cvValue = soCVEl.value.trim();
     if (!/^\d+$/.test(cvValue)) {
+      const group = soCVEl.closest('.field-group');
+      if (group) group.classList.add('field-error');
       alert('Số công văn phải là số.');
       soCVEl.focus();
       return false;
@@ -294,6 +340,7 @@ function resetGTGTForm() {
   form.reset();
   setTodayById('NgayFull_GTGT');
   resetMailPanelGTGT();
+  clearFormErrors(form);
 }
 
 // ==== TAB 2: BNKN ====
@@ -305,6 +352,8 @@ function resetMailPanelBNKN() {
 }
 
 function validateBNKNForm(fd, formElement) {
+  clearFormErrors(formElement);
+
   for (const [key, value] of fd.entries()) {
     // 2 trường CCCD được phép bỏ trống
     if (key === 'CCCD_KN' || key === 'CCCD_KH') continue;
@@ -313,6 +362,8 @@ function validateBNKNForm(fd, formElement) {
       const fieldEl = formElement.querySelector(`[name="${key}"]`);
       const labelEl = fieldEl ? fieldEl.closest('.field-group')?.querySelector('label') : null;
       const labelText = labelEl ? labelEl.innerText.replace(/[:*]/g, '').trim() : key;
+      const group = fieldEl ? fieldEl.closest('.field-group') : null;
+      if (group) group.classList.add('field-error');
       alert('Vui lòng điền đầy đủ thông tin: ' + labelText);
       if (fieldEl) fieldEl.focus();
       return false;
@@ -326,6 +377,8 @@ function validateBNKNForm(fd, formElement) {
     const is9 = /^\d{9}$/.test(v);
     const zero = v.startsWith('0');
     if (!is9 || zero) {
+      const group = soThueBaoEl.closest('.field-group');
+      if (group) group.classList.add('field-error');
       alert('Số thuê bao phải gồm đúng 9 chữ số và không bắt đầu bằng số 0 (VD: 903xxxxxx).');
       soThueBaoEl.focus();
       return false;
@@ -337,6 +390,8 @@ function validateBNKNForm(fd, formElement) {
   if (soCVEl) {
     const cvValue = soCVEl.value.trim();
     if (!/^\d+$/.test(cvValue)) {
+      const group = soCVEl.closest('.field-group');
+      if (group) group.classList.add('field-error');
       alert('Số công văn phải là số.');
       soCVEl.focus();
       return false;
@@ -354,7 +409,7 @@ function updateMailBNKN() {
   const subjEl = document.getElementById('EmailSubject_BNKN');
   const bodyEl = document.getElementById('EmailBody_BNKN');
 
-  const prefix = 'Hỗ trợ BNKN'; // ← muốn đổi chữ gì thì sửa ở đây
+  const prefix = 'Hỗ trợ BNKN';
 
   if (soCV && soTB && tenGoi) {
     subjEl.textContent = `${prefix} ${soCV} - ${soTB} - ${tenGoi}`;
@@ -438,6 +493,7 @@ function resetBNKNForm() {
   form.reset();
   setTodayById('NgayFull_BNKN');
   resetMailPanelBNKN();
+  clearFormErrors(form);
 }
 
 // ==== TAB 3: PHỤ LỤC 2 ====
@@ -449,12 +505,16 @@ function resetMailPanelPL2() {
 }
 
 function validatePL2Form(fd, formElement) {
+  clearFormErrors(formElement);
+
   for (const [key, value] of fd.entries()) {
     if (key === 'CCCD_KN' || key === 'CCCD_KH') continue;
     if (!value.trim()) {
       const fieldEl = formElement.querySelector(`[name="${key}"]`);
       const labelEl = fieldEl ? fieldEl.closest('.field-group')?.querySelector('label') : null;
       const labelText = labelEl ? labelEl.innerText.replace(/[:*]/g, '').trim() : key;
+      const group = fieldEl ? fieldEl.closest('.field-group') : null;
+      if (group) group.classList.add('field-error');
       alert('Vui lòng điền đầy đủ thông tin: ' + labelText);
       if (fieldEl) fieldEl.focus();
       return false;
@@ -467,6 +527,8 @@ function validatePL2Form(fd, formElement) {
     const is9 = /^\d{9}$/.test(v);
     const zero = v.startsWith('0');
     if (!is9 || zero) {
+      const group = soKhEl.closest('.field-group');
+      if (group) group.classList.add('field-error');
       alert('Số thuê bao KH phải gồm đúng 9 chữ số và không bắt đầu bằng số 0 (VD: 903xxxxxx).');
       soKhEl.focus();
       return false;
@@ -479,6 +541,8 @@ function validatePL2Form(fd, formElement) {
     const is9 = /^\d{9}$/.test(v);
     const zero = v.startsWith('0');
     if (!is9 || zero) {
+      const group = soLhEl.closest('.field-group');
+      if (group) group.classList.add('field-error');
       alert(
         'Số điện thoại liên hệ phải gồm đúng 9 chữ số và không bắt đầu bằng số 0 (VD: 903xxxxxx).'
       );
@@ -491,6 +555,8 @@ function validatePL2Form(fd, formElement) {
   if (soCVEl) {
     const cvValue = soCVEl.value.trim();
     if (!/^\d+$/.test(cvValue)) {
+      const group = soCVEl.closest('.field-group');
+      if (group) group.classList.add('field-error');
       alert('Số công văn phải là số.');
       soCVEl.focus();
       return false;
@@ -508,7 +574,7 @@ function updateMailPL2() {
   const subjEl = document.getElementById('EmailSubject_PL2');
   const bodyEl = document.getElementById('EmailBody_PL2');
 
-  const prefix = 'Hỗ trợ BNKN'; // ← chỉnh chữ này cho đúng format bạn muốn
+  const prefix = 'Hỗ trợ BNKN';
 
   if (soCV && soTB && tenGoi) {
     subjEl.textContent = `${prefix} ${soCV} - ${soTB} - ${tenGoi}`;
@@ -592,6 +658,7 @@ function resetPL2Form() {
   form.reset();
   setTodayById('NgayFull_PL2');
   resetMailPanelPL2();
+  clearFormErrors(form);
 }
 
 // ==== HỖ TRỢ TÌM KIẾM KHÔNG DẤU TAB 4 ====

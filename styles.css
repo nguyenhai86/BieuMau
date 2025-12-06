@@ -1,4 +1,4 @@
-/* Layout tổng thể */
+/* ===== Layout tổng thể ===== */
 *,
 *::before,
 *::after {
@@ -12,6 +12,7 @@ body {
   color: #111827;
 }
 
+/* Trang & thẻ chính */
 .page {
   min-height: 100vh;
   display: flex;
@@ -24,32 +25,45 @@ body {
   width: 100%;
   max-width: 1120px;
   background: #ffffff;
-  border-radius: 18px;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+  border-radius: 20px;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.24);
   overflow: hidden;
+  animation: card-enter 0.4s ease-out forwards;
 }
 
-/* Header */
+/* ===== Header (Glow + Fade-in) ===== */
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-  background: linear-gradient(135deg, #1d4ed8, #6366f1);
+  background: linear-gradient(135deg, #1d4ed8, #ef4444);
   color: #f9fafb;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 55%);
+  opacity: 0;
+  animation: header-glow 4s ease-in-out infinite alternate;
 }
 
 .logo-wrap {
   display: flex;
   align-items: center;
   gap: 10px;
+  z-index: 1;
 }
 
 .logo-wrap img {
-  height: 70px; /* logo lớn hơn */
+  height: 70px;
   width: auto;
-  transform: translateY(2px);
+  transform: translateY(1px);
 }
 
 .logo-text {
@@ -65,11 +79,12 @@ body {
 }
 
 .logo-text .subtitle {
-  opacity: 0.92;
+  opacity: 0.95;
 }
 
 .header-title {
   text-align: right;
+  z-index: 1;
 }
 
 .header-title h1 {
@@ -80,10 +95,10 @@ body {
 
 .header-title span {
   font-size: 12px;
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
-/* Tabs */
+/* ===== Tabs (animation mượt) ===== */
 .tab-bar {
   display: flex;
   border-bottom: 1px solid #e5e7eb;
@@ -99,9 +114,10 @@ body {
   font-size: 13px;
   white-space: nowrap;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.2s ease;
   border-bottom: 2px solid transparent;
   color: #4b5563;
+  position: relative;
 }
 
 .tab-button:hover {
@@ -110,82 +126,100 @@ body {
 }
 
 .tab-button.active {
-  border-bottom-color: #4f46e5;
   color: #1d4ed8;
   font-weight: 600;
   background: linear-gradient(to top, #e0ecff, #ffffff);
+  border-bottom-color: #ef4444;
 }
 
-/* Body & sections */
+.tab-button.active::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -2px;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #1d4ed8, #ef4444);
+}
+
+/* ===== Body & sections ===== */
 .card-body {
   padding: 18px 20px 20px;
 }
 
 .tab-content {
   display: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.18s ease-out, transform 0.18s ease-out;
 }
 
 .tab-content.active {
   display: block;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .section-title {
-  margin: 16px 0 8px;
+  margin: 10px 0 8px;
   font-size: 15px;
   font-weight: 600;
-  color: #1f2937;
-  border-left: 3px solid #4f46e5;
-  padding-left: 8px;
+  color: #111827;
 }
 
 .section-title.no-margin {
   margin-top: 0;
 }
 
-/* Form layout */
+/* ===== Form layout ===== */
 .row {
   display: flex;
-  gap: 16px;
-  margin-bottom: 10px;
-}
-
-.row.compact-row {
-  margin-bottom: 6px;
+  gap: 10px;
+  margin-bottom: 8px;
 }
 
 .field-group {
   flex: 1;
   display: flex;
   flex-direction: column;
-  font-size: 13px;
+  margin-bottom: 6px;
 }
 
-.field-group.inline {
-  max-width: 420px;
+/* highlight lỗi */
+.field-group.field-error input,
+.field-group.field-error textarea,
+.field-group.field-error select {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.8);
+  animation: field-shake 0.14s linear 0s 3;
 }
 
 .field-group label {
+  font-size: 12px;
   font-weight: 500;
   margin-bottom: 3px;
+  color: #374151;
 }
 
 .field-group input,
 .field-group select,
 .field-group textarea {
+  padding: 6px 8px;
+  border-radius: 9px;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
-  padding: 6px 9px;
   font-size: 13px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
   background: #f9fafb;
 }
 
 .field-group input:focus,
 .field-group select:focus,
 .field-group textarea:focus {
-  outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.18);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
   background: #ffffff;
 }
 
@@ -194,13 +228,23 @@ body {
   resize: vertical;
 }
 
+.field-group.inline {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-group.inline label {
+  margin-bottom: 0;
+}
+
 .help-text {
   margin-top: 3px;
   font-size: 11px;
   color: #6b7280;
 }
 
-/* Buttons */
+/* ===== Buttons ===== */
 .actions {
   margin-top: 14px;
   display: flex;
@@ -222,14 +266,14 @@ body {
 }
 
 .primary-btn {
-  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  background: linear-gradient(135deg, #2563eb, #ef4444);
   color: #ffffff;
   border-color: #2563eb;
   box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
 }
 
 .primary-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #1d4ed8, #4338ca);
+  background: linear-gradient(135deg, #1d4ed8, #dc2626);
   box-shadow: 0 6px 14px rgba(30, 64, 175, 0.3);
 }
 
@@ -249,17 +293,33 @@ body {
   background: #e5e7eb;
 }
 
-/* Info panel (mail) */
+/* ===== Card “Thông tin gửi mail” ===== */
 .info-panel {
   margin-top: 16px;
   padding: 12px 12px 10px;
-  border-radius: 12px;
-  border: 1px solid rgba(79, 70, 229, 0.12);
+  border-radius: 14px;
+  border: 1px solid rgba(37, 99, 235, 0.15);
   background: radial-gradient(circle at top left, #eef2ff, #f9fafb 45%, #ffffff);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  position: relative;
+}
+
+.info-panel::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #2563eb, #ef4444);
 }
 
 .info-panel-header {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 8px;
+  padding-left: 5px;
 }
 
 .info-panel-header h3 {
@@ -267,6 +327,25 @@ body {
   font-size: 14px;
   font-weight: 600;
   color: #111827;
+  position: relative;
+  padding-left: 24px;
+}
+
+.info-panel-header h3::before {
+  content: '✉';
+  position: absolute;
+  left: 0;
+  top: 1px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  background: linear-gradient(135deg, #2563eb, #ef4444);
+  color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(239, 246, 255, 0.9);
 }
 
 .info-panel-header p {
@@ -277,21 +356,27 @@ body {
 
 .info-row {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   gap: 6px;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
   font-size: 12px;
+}
+
+.info-panel .info-row:last-of-type {
+  margin-bottom: 6px;
 }
 
 .info-label {
   min-width: 130px;
   font-weight: 500;
   color: #374151;
+  padding-top: 2px;
 }
 
 .info-value {
   color: #111827;
   word-break: break-word;
+  line-height: 1.5;
 }
 
 .mail-body-header {
@@ -300,15 +385,16 @@ body {
 
 .mail-body {
   margin-top: 4px;
-  padding: 8px 9px;
+  padding: 10px 11px;
   font-size: 12px;
   border-radius: 8px;
   background: #ffffff;
   border: 1px solid rgba(79, 70, 229, 0.18);
   white-space: pre-line;
+  line-height: 1.5;
 }
 
-/* Lookup (tab 4) */
+/* ===== Lookup (tab 4) ===== */
 .lookup-section {
   margin-top: 4px;
 }
@@ -419,7 +505,59 @@ body {
   color: #6b7280;
 }
 
-/* Responsive */
+/* ===== Overlay tiến trình xuất file ===== */
+.progress-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+  z-index: 40;
+}
+
+.progress-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.progress-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.36);
+}
+
+.progress-spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #2563eb;
+  border-right-color: #ef4444;
+  animation: spin 0.7s linear infinite;
+}
+
+.progress-text p {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.progress-sub {
+  display: block;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+/* ===== Responsive ===== */
 @media (max-width: 768px) {
   .card {
     max-width: 100%;
@@ -444,25 +582,48 @@ body {
     align-items: stretch;
   }
 }
-/* Nới khoảng cách dọc cho Thông tin gửi mail */
-.info-row {
-  align-items: flex-start; /* label và nội dung không bị dính sát nhau */
-  margin-bottom: 8px; /* tăng khoảng cách giữa các dòng */
+
+/* ===== Animations ===== */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-.info-panel .info-row:last-of-type {
-  margin-bottom: 6px; /* dòng cuối cùng vẫn có chút spacing */
+@keyframes header-glow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.info-label {
-  padding-top: 2px; /* label cân giữa so với nội dung nhiều dòng */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.info-value,
-.mail-body {
-  line-height: 1.5; /* tăng line-height cho chữ đỡ dày */
-}
-
-.mail-body {
-  padding: 10px 11px; /* padding dày hơn một chút */
+@keyframes field-shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  50% {
+    transform: translateX(2px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
