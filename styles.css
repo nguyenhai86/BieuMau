@@ -411,6 +411,22 @@ body {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+} /* Ô tìm kiếm trong tab 4 */
+.lookup-controls input[type='text'] {
+  padding: 6px 8px;
+  border-radius: 9px;
+  border: 1px solid #d1d5db;
+  font-size: 13px;
+  outline: none;
+  background: #f9fafb;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+  min-width: 220px;
+}
+
+.lookup-controls input[type='text']:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
+  background: #ffffff;
 }
 
 .lookup-tip {

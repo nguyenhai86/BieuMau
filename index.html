@@ -501,59 +501,26 @@
             </form>
           </div>
 
-          <!-- TAB 4: DANH SÁCH PHƯỜNG/XÃ -->
+          <!-- TAB 4: DANH SÁCH CHI NHÁNH -->
           <div class="tab-content" id="tab-ds">
-            <section class="lookup-section">
-              <div class="lookup-header">
-                <div>
-                  <h2 class="section-title no-margin">Danh sách phường/xã theo khu vực</h2>
-                  <p class="help-text">
-                    Dữ liệu đọc từ file
-                    <strong>danh_sach_phuong_xa.xlsx</strong> đặt cùng thư mục với
-                    <strong>index.html</strong>. Dùng để tra nhanh chi nhánh phù hợp.
-                  </p>
-                </div>
-              </div>
+            <h2 class="section-title">Danh sách chi nhánh</h2>
 
-              <div class="lookup-controls">
-                <div class="field-group inline">
-                  <label>Tìm kiếm nhanh:</label>
-                  <input
-                    type="text"
-                    id="searchPhuong"
-                    placeholder="Nhập tên khu vực / quận / phường..."
-                    oninput="filterPhuongXa()" />
-                </div>
-                <div class="lookup-tip">
-                  Gợi ý: gõ <strong>Gò Vấp</strong>, <strong>Thủ Đức</strong>, tên phường, hoặc từ
-                  khóa bất kỳ (có thể gõ không dấu).
-                </div>
-              </div>
+            <div class="lookup-controls">
+              <input
+                id="searchCN"
+                type="text"
+                placeholder="Nhập từ khóa tìm kiếm (có dấu/không dấu)..." />
+              <span class="lookup-tip"
+                >Tìm trong tất cả các cột • Sắp xếp gần giống nhất • Highlight</span
+              >
+            </div>
 
-              <div class="table-wrapper">
-                <table class="lookup-table">
-                  <thead>
-                    <tr>
-                      <th>Khu vực / Chi nhánh</th>
-                      <th>Quận / Huyện cũ</th>
-                      <th>Xã / Phường mới</th>
-                    </tr>
-                  </thead>
-                  <tbody id="tbodyPhuongXa">
-                    <tr>
-                      <td colspan="3" class="table-placeholder">
-                        Đang tải dữ liệu từ file danh_sach_phuong_xa.xlsx...
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <p class="lookup-footnote">
-                * Lưu ý: Cột tên trong Excel cần đúng tiêu đề:
-                <code>Khu vực</code>, <code>Quận/Huyện cũ</code>, <code>Xã/Phường mới</code>.
-              </p>
-            </section>
+            <div class="table-wrapper">
+              <table class="lookup-table" id="CNTable">
+                <thead id="CNThead"></thead>
+                <tbody id="CNBody"></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

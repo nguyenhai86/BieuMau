@@ -28,7 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initGTGTForm();
   initBNKNForm();
   initPL2Form();
-  loadDanhSachPhuongXa(); // Tab 4
+  loadDanhSachCN(); // Tab 4: chi nhánh
+
+  const searchCN = document.getElementById('searchCN');
+  if (searchCN) {
+    searchCN.addEventListener('input', handleSearchCNInput);
+  }
 });
 
 // ==== COMMON HELPERS ====
@@ -661,7 +666,7 @@ function resetPL2Form() {
   clearFormErrors(form);
 }
 
-// ==== HỖ TRỢ TÌM KIẾM KHÔNG DẤU TAB 4 ====
+// ==== HỖ TRỢ TÌM KIẾM KHÔNG DẤU (dùng chung TAB 4) ====
 // Bỏ dấu tiếng Việt + đưa về chữ thường
 function normalizeVN(str) {
   if (!str) return '';
@@ -675,49 +680,78 @@ function normalizeVN(str) {
     .trim();
 }
 
-// Lưu dữ liệu phường/xã để tìm kiếm & sort
-let PHUONG_XA_DATA = [];
+// ===== TAB 4: DANH SÁCH CHI NHÁNH (DanhsachCN.xlsx) =====
+let CN_DATA = [];
+let CN_HEADERS = [];
 
-// Tính điểm giống nhau giữa 1 dòng và chuỗi tìm kiếm
-function scorePhuongXaRow(item, queryNorm, tokens) {
+// highlight keyword (case-insensitive, theo đúng chữ user gõ)
+function highlightKeyword(text, keyword) {
+  if (!keyword) return text;
+  const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp(escaped, 'gi');
+  return text.toString().replace(re, (m) => `<mark>${m}</mark>`);
+}
+
+// Tính điểm similarity cho 1 dòng
+function scoreCNRow(item, queryNorm, tokens) {
   if (!queryNorm) return 0;
-
   let score = 0;
-  const fields = [item.normKV, item.normQH, item.normXP];
+  const all = item.normAll;
 
-  // So khớp toàn chuỗi
-  if (item.normAll === queryNorm) score += 80;
-  else if (item.normAll.startsWith(queryNorm)) score += 60;
-  else if (item.normAll.includes(queryNorm)) score += 30;
+  if (all === queryNorm) score += 100;
+  else if (all.startsWith(queryNorm)) score += 75;
+  else if (all.includes(queryNorm)) score += 40;
 
-  // So khớp theo từng từ
+  // theo từng từ & từng cột
   tokens.forEach((t) => {
-    fields.forEach((f, idx) => {
-      if (!f || !t) return;
-      let weight = 1;
-      // Ưu tiên Khu vực một chút
-      if (idx === 0) weight = 1.3;
-
-      if (f === t) score += 25 * weight;
-      else if (f.startsWith(t)) score += 15 * weight;
-      else if (f.includes(t)) score += 8 * weight;
+    if (!t) return;
+    CN_HEADERS.forEach((h) => {
+      const vNorm = normalizeVN(item.cells[h] ?? '');
+      if (!vNorm) return;
+      if (vNorm === t) score += 25;
+      else if (vNorm.startsWith(t)) score += 15;
+      else if (vNorm.includes(t)) score += 8;
     });
   });
 
   return score;
 }
 
-// ==== TAB 4: DANH SÁCH PHƯỜNG/XÃ ====
-function loadDanhSachPhuongXa() {
-  const tbody = document.getElementById('tbodyPhuongXa');
+// Render body bảng
+function renderCNTable(rows, keyword = '') {
+  const tbody = document.getElementById('CNBody');
   if (!tbody) return;
 
-  tbody.innerHTML =
-    '<tr><td colspan="3" class="table-placeholder">Đang tải dữ liệu từ file danh_sach_phuong_xa.xlsx...</td></tr>';
+  if (!rows || !rows.length) {
+    tbody.innerHTML =
+      '<tr><td colspan="100" class="table-placeholder">Không tìm thấy kết quả phù hợp.</td></tr>';
+    return;
+  }
 
-  fetch('danh_sach_phuong_xa.xlsx')
+  tbody.innerHTML = rows
+    .map((item, idx) => {
+      const stt = idx + 1; // STT theo thứ tự đang hiển thị
+      const tds = CN_HEADERS.map((h) => {
+        const txt = item.cells[h] ?? '';
+        return `<td>${highlightKeyword(txt, keyword)}</td>`;
+      }).join('');
+      return `<tr><td style="text-align:center;">${stt}</td>${tds}</tr>`;
+    })
+    .join('');
+}
+
+// ⬇️ HÀM CHÍNH BẠN DÁN ĐÈ VÀO ĐÂY
+function loadDanhSachCN() {
+  const thead = document.getElementById('CNThead');
+  const tbody = document.getElementById('CNBody');
+  if (!thead || !tbody) return;
+
+  tbody.innerHTML =
+    '<tr><td colspan="100" class="table-placeholder">Đang tải dữ liệu từ file DanhsachCN.xlsx...</td></tr>';
+
+  fetch('DanhsachCN.xlsx')
     .then((res) => {
-      if (!res.ok) throw new Error('Không đọc được file Excel');
+      if (!res.ok) throw new Error('Không đọc được file Excel DanhsachCN.xlsx');
       return res.arrayBuffer();
     })
     .then((buf) => {
@@ -728,93 +762,81 @@ function loadDanhSachPhuongXa() {
 
       const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
 
-      tbody.innerHTML = '';
-      PHUONG_XA_DATA = [];
+      if (!rows.length) {
+        CN_DATA = [];
+        CN_HEADERS = [];
+        thead.innerHTML = '';
+        tbody.innerHTML =
+          '<tr><td colspan="100" class="table-placeholder">Không có dữ liệu trong file Excel.</td></tr>';
+        return;
+      }
 
-      rows.forEach((row, index) => {
-        const kv = row['Khu vực'] || '';
-        const qh = row['Quận/Huyện cũ'] || '';
-        const xp = row['Xã/Phường mới'] || '';
+      // ✅ Lọc bỏ cột rác kiểu _EMPTY, __EMPTY_1,...
+      CN_HEADERS = Object.keys(rows[0] || {}).filter((h) => h && !/^_+EMPTY/i.test(h));
 
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${kv}</td><td>${qh}</td><td>${xp}</td>`;
-        tbody.appendChild(tr);
+      // Header bảng (thêm cột STT phía trước)
+      thead.innerHTML =
+        `<tr><th style="width:60px; text-align:center;">STT</th>` +
+        CN_HEADERS.map((h) => `<th>${h}</th>`).join('') +
+        `</tr>`;
 
-        const normKV = normalizeVN(kv);
-        const normQH = normalizeVN(qh);
-        const normXP = normalizeVN(xp);
-        const normAll = normalizeVN(`${kv} ${qh} ${xp}`);
-
-        PHUONG_XA_DATA.push({
-          index,
-          kv,
-          qh,
-          xp,
-          tr,
-          normKV,
-          normQH,
-          normXP,
-          normAll,
-          _score: 0
+      // Chuẩn hoá dữ liệu + normAll để search
+      CN_DATA = rows.map((row, index) => {
+        const cells = {};
+        const allTexts = CN_HEADERS.map((h) => row[h] ?? '').join(' ');
+        CN_HEADERS.forEach((h) => {
+          cells[h] = row[h] ?? '';
         });
+
+        return {
+          index,
+          cells,
+          normAll: normalizeVN(allTexts),
+          _score: 0
+        };
       });
 
-      if (!rows.length) {
-        tbody.innerHTML =
-          '<tr><td colspan="3" class="table-placeholder">Không có dữ liệu trong file Excel.</td></tr>';
-      }
+      renderCNTable(CN_DATA);
     })
     .catch((err) => {
       console.error(err);
       tbody.innerHTML =
-        '<tr><td colspan="3" class="table-placeholder" style="color:#b91c1c;">Không đọc được file danh_sach_phuong_xa.xlsx. Vui lòng kiểm tra lại tên file và vị trí.</td></tr>';
+        '<tr><td colspan="100" class="table-placeholder" style="color:#b91c1c;">Không đọc được file DanhsachCN.xlsx. Vui lòng kiểm tra lại tên file và vị trí.</td></tr>';
     });
 }
 
-function filterPhuongXa() {
-  const input = document.getElementById('searchPhuong');
-  if (!input) return;
+// Xử lý khi gõ tìm kiếm
+function handleSearchCNInput(e) {
+  const keyword = (e.target.value || '').trim();
+  if (!CN_DATA.length) return;
 
-  const queryRaw = input.value || '';
-  const queryNorm = normalizeVN(queryRaw);
-  const tbody = document.getElementById('tbodyPhuongXa');
-  if (!tbody || !PHUONG_XA_DATA.length) return;
-
-  // Nếu không nhập gì -> trả về thứ tự gốc
-  if (!queryNorm) {
-    tbody.innerHTML = '';
-    PHUONG_XA_DATA.slice() // copy
-      .sort((a, b) => a.index - b.index)
-      .forEach((item) => {
-        tbody.appendChild(item.tr);
-      });
+  if (!keyword) {
+    renderCNTable(CN_DATA);
     return;
   }
 
-  const tokens = queryNorm.split(/\s+/).filter(Boolean);
+  const qNorm = normalizeVN(keyword);
+  const tokens = qNorm.split(/\s+/).filter(Boolean);
 
-  // Tính điểm & lọc những dòng có match
-  const matched = PHUONG_XA_DATA.filter((item) => {
-    const s = scorePhuongXaRow(item, queryNorm, tokens);
-    item._score = s;
-    return s > 0;
-  });
-
-  tbody.innerHTML = '';
-
-  if (!matched.length) {
-    tbody.innerHTML =
-      '<tr><td colspan="3" class="table-placeholder">Không tìm thấy kết quả phù hợp.</td></tr>';
-    return;
-  }
-
-  // Sort: điểm cao nhất đứng đầu, nếu bằng nhau thì giữ theo thứ tự gốc
-  matched
+  const matched = CN_DATA.map((item) => {
+    const s = scoreCNRow(item, qNorm, tokens);
+    return { ...item, _score: s };
+  })
+    .filter((x) => x._score > 0)
     .sort((a, b) => {
       if (b._score !== a._score) return b._score - a._score;
       return a.index - b.index;
     })
-    .forEach((item) => {
-      tbody.appendChild(item.tr);
-    });
+    .map((x) => ({
+      index: x.index,
+      cells: x.cells,
+      normAll: x.normAll,
+      _score: x._score
+    }));
+
+  if (!matched.length) {
+    renderCNTable([], keyword);
+  } else {
+    renderCNTable(matched, keyword);
+  }
 }
