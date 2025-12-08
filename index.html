@@ -598,36 +598,25 @@
 
           <!-- TAB 4: DANH SÁCH CHI NHÁNH + CÔNG CỤ GEMINI -->
           <div class="tab-content" id="tab-ds">
-            <h2 class="section-title">Danh sách chi nhánh</h2>
-
             <!-- Khung công cụ AI (Gemini) -->
             <div class="ai-panel">
-              <h3 class="ai-panel-title">Công cụ hỗ trợ từ Gemini</h3>
-
               <div class="row">
                 <div class="field-group" style="flex: 2">
-                  <label>Địa chỉ thô KH cung cấp:</label>
+                  <label>Địa chỉ:</label>
                   <input
                     type="text"
                     id="rawAddress"
                     placeholder="VD: 20 CMT8, p.13, q.10, hcm hoặc địa chỉ KH đọc trên line..." />
-                  <div class="help-text">
-                    B1: Dán địa chỉ KH cung cấp ➜ B2: Bấm &quot;Chuẩn hóa địa chỉ&quot; hoặc
-                    &quot;Dự đoán Tên TTKD mới&quot;.
-                  </div>
                 </div>
               </div>
 
               <div class="lookup-controls ai-buttons">
                 <button type="button" class="secondary-btn" id="btnNormalizeAddress">
-                  Chuẩn hóa địa chỉ (Gemini)
+                  Chuẩn hóa địa chỉ
                 </button>
                 <button type="button" class="secondary-btn" id="btnPredictTTKD">
-                  Dự đoán Tên TTKD mới (Gemini)
+                  Dự đoán chi nhánh
                 </button>
-                <span class="lookup-tip">
-                  Kết quả sẽ hiển thị bên dưới (địa chỉ chuẩn + Tên TTKD + lý do chọn).
-                </span>
               </div>
 
               <div class="ai-result" id="aiResult">
@@ -636,6 +625,7 @@
                 </p>
               </div>
             </div>
+            <h2 class="section-title">Danh sách chi nhánh</h2>
 
             <!-- Tìm kiếm trong file DanhsachCN.xlsx -->
             <div class="lookup-controls">

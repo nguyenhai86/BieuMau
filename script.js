@@ -1,7 +1,5 @@
 const GEMINI_API_KEY = 'AIzaSyCZI14RoHs05bE4rN-klj45pLxyDwzlzSk';
 const GEMINI_MODEL_TAB4 = 'gemini-2.5-flash';
-// const GEMINI_MODEL_TAB4 = "gemini-2.5-pro";
-// const GEMINI_MODEL_TAB4 = 'gemini-2.5-flash-live';
 
 // ==== KHỞI TẠO TABS & FORM ====
 document.addEventListener('DOMContentLoaded', () => {
@@ -765,11 +763,21 @@ function findHeaderByKeyword(keyword) {
 }
 
 // highlight keyword (case-insensitive, theo đúng chữ user gõ)
+// Highlight đẹp cho Tab 4
 function highlightKeyword(text, keyword) {
   if (!keyword) return text;
-  const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const re = new RegExp(escaped, 'gi');
-  return text.toString().replace(re, (m) => `<mark>${m}</mark>`);
+
+  const normText = normalizeVN(text);
+  const normKey = normalizeVN(keyword);
+
+  const index = normText.indexOf(normKey);
+  if (index === -1) return text;
+
+  const before = text.substring(0, index);
+  const match = text.substring(index, index + keyword.length);
+  const after = text.substring(index + keyword.length);
+
+  return `${before}<span class="highlight-term">${match}</span>${after}`;
 }
 
 // Tính điểm similarity cho 1 dòng (dùng cho search)
