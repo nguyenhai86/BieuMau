@@ -1,4 +1,4 @@
-/* ===== Layout tổng thể ===== */
+/* ===== RESET & GLOBAL ===== */
 *,
 *::before,
 *::after {
@@ -12,7 +12,7 @@ body {
   color: #111827;
 }
 
-/* Trang & thẻ chính */
+/* ===== PAGE & CARD ===== */
 .page {
   min-height: 100vh;
   display: flex;
@@ -28,10 +28,9 @@ body {
   border-radius: 20px;
   box-shadow: 0 20px 45px rgba(15, 23, 42, 0.24);
   overflow: hidden;
-  animation: card-enter 0.4s ease-out forwards;
 }
 
-/* ===== Header (Glow + Fade-in) ===== */
+/* ===== HEADER ===== */
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -98,7 +97,7 @@ body {
   opacity: 0.92;
 }
 
-/* ===== Tabs (animation mượt) ===== */
+/* ===== TAB BAR ===== */
 .tab-bar {
   display: flex;
   border-bottom: 1px solid #e5e7eb;
@@ -144,7 +143,7 @@ body {
   background: linear-gradient(90deg, #1d4ed8, #ef4444);
 }
 
-/* ===== Body & sections ===== */
+/* ===== CARD BODY / TABS ===== */
 .card-body {
   padding: 18px 20px 20px;
 }
@@ -162,18 +161,95 @@ body {
   transform: translateY(0);
 }
 
+/* ===== TITLES ===== */
 .section-title {
-  margin: 10px 0 8px;
-  font-size: 15px;
+  margin: 14px 0 8px;
+  font-size: 14px;
   font-weight: 600;
   color: #111827;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .section-title.no-margin {
   margin-top: 0;
 }
 
-/* ===== Form layout ===== */
+/* Icon nhóm */
+.group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.group-icon {
+  font-size: 20px;
+  line-height: 1;
+  opacity: 0.9;
+}
+
+/* ===== GROUP CARD ===== */
+.group-card {
+  margin-top: 10px;
+  margin-bottom: 14px;
+  padding: 12px 14px 10px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, #f9fafb, #ffffff);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+}
+/* ===== MÀU NHẸ THEO CARD ===== */
+.group-card.theme-blue {
+  background: linear-gradient(135deg, #eff6ff, #ffffff);
+  border-color: #bfdbfe;
+}
+
+.group-card.theme-green {
+  background: linear-gradient(135deg, #ecfdf3, #ffffff);
+  border-color: #bbf7d0;
+}
+
+.group-card.theme-amber {
+  background: linear-gradient(135deg, #fffbeb, #ffffff);
+  border-color: #facc15;
+}
+
+.group-card.theme-rose {
+  background: linear-gradient(135deg, #fef2f2, #ffffff);
+  border-color: #fecaca;
+}
+
+.group-card.theme-violet {
+  background: linear-gradient(135deg, #f5f3ff, #ffffff);
+  border-color: #ddd6fe;
+}
+
+/* chữ tiêu đề group theo màu chính (nhẹ) */
+.group-card.theme-blue .group-title {
+  color: #1d4ed8;
+}
+.group-card.theme-green .group-title {
+  color: #15803d;
+}
+.group-card.theme-amber .group-title {
+  color: #c2410c;
+}
+.group-card.theme-rose .group-title {
+  color: #b91c1c;
+}
+.group-card.theme-violet .group-title {
+  color: #6d28d9;
+}
+.group-card.theme-cyan {
+  background: linear-gradient(135deg, #ecfeff, #ffffff);
+  border-color: #a5f3fc;
+}
+
+.group-card.theme-cyan .group-title {
+  color: #0e7490;
+}
+/* ===== FORM LAYOUT ===== */
 .row {
   display: flex;
   gap: 10px;
@@ -228,72 +304,13 @@ body {
   resize: vertical;
 }
 
-.field-group.inline {
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-}
-
-.field-group.inline label {
-  margin-bottom: 0;
-}
-
 .help-text {
   margin-top: 3px;
   font-size: 11px;
   color: #6b7280;
 }
 
-/* ===== Buttons ===== */
-.actions {
-  margin-top: 14px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.primary-btn,
-.secondary-btn {
-  padding: 7px 15px;
-  font-size: 13px;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  transition: all 0.18s ease;
-}
-
-.primary-btn {
-  background: linear-gradient(135deg, #2563eb, #ef4444);
-  color: #ffffff;
-  border-color: #2563eb;
-  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
-}
-
-.primary-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #1d4ed8, #dc2626);
-  box-shadow: 0 6px 14px rgba(30, 64, 175, 0.3);
-}
-
-.primary-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.secondary-btn {
-  background: #f9fafb;
-  color: #111827;
-  border-color: #d1d5db;
-}
-
-.secondary-btn:hover {
-  background: #e5e7eb;
-}
-
-/* ===== Card “Thông tin gửi mail” ===== */
+/* ===== INFO PANEL (THÔNG TIN MAIL) ===== */
 .info-panel {
   margin-top: 16px;
   padding: 12px 12px 10px;
@@ -394,24 +411,64 @@ body {
   line-height: 1.5;
 }
 
-/* ===== Lookup (tab 4) ===== */
-.lookup-section {
-  margin-top: 4px;
-}
-
-.lookup-header {
+/* ===== BUTTONS ===== */
+.actions {
+  margin-top: 14px;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
+.primary-btn,
+.secondary-btn {
+  padding: 7px 15px;
+  font-size: 13px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.18s ease;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #2563eb, #ef4444);
+  color: #ffffff;
+  border-color: #2563eb;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+}
+
+.primary-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1d4ed8, #dc2626);
+  box-shadow: 0 6px 14px rgba(30, 64, 175, 0.3);
+}
+
+.primary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.secondary-btn {
+  background: #f9fafb;
+  color: #111827;
+  border-color: #d1d5db;
+}
+
+.secondary-btn:hover {
+  background: #e5e7eb;
+}
+
+/* ===== TAB 4: DANH SÁCH CHI NHÁNH ===== */
 .lookup-controls {
-  margin-top: 10px;
+  margin-top: 8px;
   display: flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-} /* Ô tìm kiếm trong tab 4 */
+}
+
 .lookup-controls input[type='text'] {
   padding: 6px 8px;
   border-radius: 9px;
@@ -476,17 +533,6 @@ body {
   border-bottom: 1px solid #e5e7eb;
   font-weight: 600;
   color: #1f2937;
-  position: relative;
-}
-
-.lookup-table th:first-child::before {
-  content: 'KV';
-  position: absolute;
-  top: 6px;
-  right: 10px;
-  font-size: 9px;
-  color: rgba(37, 99, 235, 0.7);
-  text-transform: uppercase;
 }
 
 .lookup-table td {
@@ -494,7 +540,6 @@ body {
   border-bottom: 1px solid #f3f4f6;
 }
 
-/* Nhấn nhẹ từng dòng */
 .lookup-table tr:nth-child(even) td {
   background: #f9fafb;
 }
@@ -503,80 +548,84 @@ body {
   background: #e0ecff;
 }
 
-/* Badge nhỏ cho khu vực (cột 1) */
-.lookup-table td:first-child {
-  font-weight: 500;
-  color: #1d4ed8;
-}
-
-/* Placeholder */
-.table-placeholder {
-  text-align: left;
-  color: #6b7280;
-}
-
-.lookup-footnote {
-  margin-top: 6px;
-  font-size: 11px;
-  color: #6b7280;
-}
-
-/* ===== Overlay tiến trình xuất file ===== */
+/* ===== OVERLAY TIẾN TRÌNH ===== */
 .progress-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.28);
-  display: flex;
+  background: rgba(15, 23, 42, 0.4);
+  display: none;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.18s ease;
-  z-index: 40;
+  z-index: 999;
 }
 
 .progress-overlay.visible {
-  opacity: 1;
-  pointer-events: auto;
+  display: flex;
 }
 
 .progress-card {
+  background: #ffffff;
+  padding: 16px 20px;
+  border-radius: 14px;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.45);
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 18px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.36);
+  gap: 14px;
 }
 
 .progress-spinner {
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
   border-radius: 999px;
   border: 3px solid #e5e7eb;
   border-top-color: #2563eb;
-  border-right-color: #ef4444;
-  animation: spin 0.7s linear infinite;
+  animation: spin 0.8s linear infinite;
 }
 
 .progress-text p {
   margin: 0;
   font-size: 13px;
-  font-weight: 500;
-  color: #111827;
+  font-weight: 600;
 }
 
 .progress-sub {
-  display: block;
   font-size: 11px;
   color: #6b7280;
 }
 
-/* ===== Responsive ===== */
+/* ===== ANIMATIONS ===== */
+@keyframes header-glow {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 0.7;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes field-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-1px);
+  }
+  75% {
+    transform: translateX(1px);
+  }
+}
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .card {
-    max-width: 100%;
+    border-radius: 0;
   }
 
   .card-header {
@@ -591,55 +640,5 @@ body {
 
   .row {
     flex-direction: column;
-  }
-
-  .lookup-controls {
-    flex-direction: column;
-    align-items: stretch;
-  }
-}
-
-/* ===== Animations ===== */
-@keyframes card-enter {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.99);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes header-glow {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes field-shake {
-  0% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-2px);
-  }
-  50% {
-    transform: translateX(2px);
-  }
-  75% {
-    transform: translateX(-2px);
-  }
-  100% {
-    transform: translateX(0);
   }
 }

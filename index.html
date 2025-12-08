@@ -39,159 +39,186 @@
           <button class="tab-button active" data-tab="tab-gtgt">Phiếu KN Đơn DV GTGT</button>
           <button class="tab-button" data-tab="tab-bnkn">Phụ lục 1 - BNKN</button>
           <button class="tab-button" data-tab="tab-pl2">Phụ lục 2 - KHDN Gia Định</button>
-          <button class="tab-button" data-tab="tab-ds">Danh sách phường/xã</button>
+          <button class="tab-button" data-tab="tab-ds">Danh sách chi nhánh</button>
         </div>
 
         <div class="card-body">
           <!-- TAB 1: GTGT -->
           <div class="tab-content active" id="tab-gtgt">
             <form id="wordForm">
-              <!-- Văn bản -->
-              <h2 class="section-title">Thông tin văn bản</h2>
-              <div class="row">
-                <div class="field-group" style="flex: 2">
-                  <label>Số công văn:</label>
-                  <input type="number" name="SoCV" required />
-                  <div class="help-text">Ví dụ: 1234</div>
-                </div>
-                <div class="field-group">
-                  <label>Ngày văn bản:</label>
-                  <input type="date" id="NgayFull_GTGT" name="NgayFull_GTGT" required />
-                  <div class="help-text">Mặc định là ngày hiện tại, có thể chỉnh lại.</div>
-                </div>
-              </div>
-
-              <!-- KH -->
-              <h2 class="section-title">Thông tin khách hàng</h2>
-              <div class="row">
-                <div class="field-group">
-                  <label>Họ tên người khiếu nại:</label>
-                  <input type="text" name="HO_TEN" required />
-                </div>
-                <div class="field-group">
-                  <label>Số thuê bao:</label>
-                  <input type="number" name="SO_THUE_BAO" required />
-                  <div class="help-text">Phải đủ 9 số, không có số 0 ở đầu (VD: 903xxxxxx).</div>
+              <!-- CARD 1: Thông tin văn bản -->
+              <div class="group-card theme-blue">
+                <h2 class="section-title group-title">
+                  <span class="group-icon">📄</span>
+                  <span>Thông tin văn bản</span>
+                </h2>
+                <div class="row">
+                  <div class="field-group" style="flex: 2">
+                    <label>Số công văn</label>
+                    <input type="number" name="SoCV" required />
+                    <div class="help-text">Ví dụ: 1234</div>
+                  </div>
+                  <div class="field-group">
+                    <label>Ngày văn bản</label>
+                    <input type="date" id="NgayFull_GTGT" name="NgayFull_GTGT" required />
+                    <div class="help-text">Mặc định là ngày hiện tại, có thể chỉnh lại.</div>
+                  </div>
                 </div>
               </div>
 
-              <div class="row">
-                <div class="field-group">
-                  <label>Địa chỉ:</label>
-                  <input type="text" name="DIA_CHI" required />
+              <!-- CARD 2: Khách hàng & Thuê bao -->
+              <div class="group-card theme-green">
+                <h2 class="section-title group-title">
+                  <span class="group-icon">👥</span>
+                  <span>Thông tin khách hàng & thuê bao</span>
+                </h2>
+
+                <div class="row">
+                  <div class="field-group">
+                    <label>Họ tên người khiếu nại</label>
+                    <input type="text" name="HO_TEN" required />
+                  </div>
+                  <div class="field-group">
+                    <label>CCCD/CMND người khiếu nại (có thể để trống)</label>
+                    <input type="text" name="CCCD" />
+                  </div>
                 </div>
-                <div class="field-group">
-                  <label>CCCD/CMND khách hàng (có thể để trống):</label>
-                  <input type="text" name="CCCD" />
+
+                <div class="row">
+                  <div class="field-group">
+                    <label>Số thuê bao</label>
+                    <input type="number" name="SO_THUE_BAO" required />
+                    <div class="help-text">Phải đủ 9 số, không có số 0 ở đầu (VD: 903xxxxxx).</div>
+                  </div>
+                  <div class="field-group">
+                    <label>Địa chỉ</label>
+                    <input type="text" name="DIA_CHI" required />
+                  </div>
                 </div>
               </div>
 
-              <!-- DV -->
-              <h2 class="section-title">Dịch vụ khiếu nại</h2>
-              <div class="row">
-                <div class="field-group">
-                  <label>Tên nhóm dịch vụ:</label>
-                  <input type="text" name="TEN_NHOM_DV" required />
+              <!-- CARD 3: Dịch vụ khiếu nại -->
+              <div class="group-card theme-amber">
+                <h2 class="section-title group-title">
+                  <span class="group-icon">🧩</span>
+                  <span>Dịch vụ khiếu nại</span>
+                </h2>
+
+                <div class="row">
+                  <div class="field-group">
+                    <label>Tên nhóm dịch vụ</label>
+                    <input type="text" name="TEN_NHOM_DV" required />
+                  </div>
+                  <div class="field-group">
+                    <label>Tên gói dịch vụ</label>
+                    <input type="text" name="TEN_GOI" required />
+                  </div>
                 </div>
+
                 <div class="field-group">
-                  <label>Tên gói dịch vụ:</label>
-                  <input type="text" name="TEN_GOI" required />
+                  <label>Nội dung DTV ghi nhận</label>
+                  <textarea name="NOI_DUNG_DTV" required></textarea>
+                </div>
+
+                <div class="field-group">
+                  <label>Kết quả MDS kiểm tra</label>
+                  <textarea name="KQ_MDS" required></textarea>
                 </div>
               </div>
 
-              <div class="field-group">
-                <label>Nội dung DTV ghi nhận:</label>
-                <textarea name="NOI_DUNG_DTV" required></textarea>
-              </div>
+              <!-- CARD 4: Đăng ký / Hủy dịch vụ -->
+              <div class="group-card theme-rose">
+                <h2 class="section-title group-title">
+                  <span class="group-icon">🔄</span>
+                  <span>Đăng ký / Hủy dịch vụ</span>
+                </h2>
 
-              <div class="field-group">
-                <label>Kết quả MDS kiểm tra:</label>
-                <textarea name="KQ_MDS" required></textarea>
-              </div>
+                <div class="row">
+                  <div class="field-group">
+                    <label>Ngày đăng ký</label>
+                    <input type="text" name="NGAY_DK" required />
+                  </div>
+                  <div class="field-group">
+                    <label>Ngày hủy</label>
+                    <input type="text" name="NGAY_HUY" required />
+                  </div>
+                </div>
 
-              <!-- ĐK / Hủy -->
-              <h2 class="section-title">Đăng ký / Hủy dịch vụ</h2>
-              <div class="row">
-                <div class="field-group">
-                  <label>Ngày đăng ký:</label>
-                  <input type="text" name="NGAY_DK" required />
-                </div>
-                <div class="field-group">
-                  <label>Ngày hủy:</label>
-                  <input type="text" name="NGAY_HUY" required />
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="field-group">
-                  <label>Nguồn đăng ký:</label>
-                  <input type="text" name="NGUON_DK" required />
-                </div>
-                <div class="field-group">
-                  <label>Nguồn hủy:</label>
-                  <input type="text" name="NGUON_HUY" required />
+                <div class="row">
+                  <div class="field-group">
+                    <label>Nguồn đăng ký</label>
+                    <input type="text" name="NGUON_DK" required />
+                  </div>
+                  <div class="field-group">
+                    <label>Nguồn hủy</label>
+                    <input type="text" name="NGUON_HUY" required />
+                  </div>
                 </div>
               </div>
 
-              <!-- Cước & CN -->
-              <h2 class="section-title">Cước và đơn vị xử lý</h2>
-              <div class="row">
-                <div class="field-group">
-                  <label>Cước tạm tính:</label>
-                  <input type="text" name="CUOC_TAM" required />
+              <!-- CARD 5: Cước & Đơn vị xử lý -->
+              <div class="group-card theme-cyan">
+                <h2 class="section-title group-title">
+                  <span class="group-icon">🏢</span>
+                  <span>Cước và đơn vị xử lý</span>
+                </h2>
+
+                <div class="row">
+                  <div class="field-group">
+                    <label>Cước tạm tính</label>
+                    <input type="text" name="CUOC_TAM" required />
+                  </div>
+                  <div class="field-group">
+                    <label>Tên chi nhánh xử lý</label>
+                    <select name="TEN_CN" id="TenChiNhanh_GTGT" required>
+                      <option value="">-- Chọn chi nhánh --</option>
+                      <option value="Sài Gòn">Sài Gòn</option>
+                      <option value="Gia Định">Gia Định</option>
+                      <option value="Bến Thành">Bến Thành</option>
+                      <option value="Gò Vấp">Gò Vấp</option>
+                      <option value="Thủ Đức">Thủ Đức</option>
+                    </select>
+                  </div>
                 </div>
-                <div class="field-group">
-                  <label>Tên chi nhánh xử lý:</label>
-                  <select name="TEN_CN" id="TenChiNhanh_GTGT" required>
-                    <option value="">-- Chọn chi nhánh --</option>
-                    <option value="Sài Gòn">Sài Gòn</option>
-                    <option value="Gia Định">Gia Định</option>
-                    <option value="Bến Thành">Bến Thành</option>
-                    <option value="Gò Vấp">Gò Vấp</option>
-                    <option value="Thủ Đức">Thủ Đức</option>
-                  </select>
+
+                <div class="row">
+                  <div class="field-group">
+                    <label>Dịch vụ GTGT</label>
+                    <select name="DICH_VU_GTGT" id="DichVuGTGT" required>
+                      <option value="">-- Chọn dịch vụ GTGT --</option>
+                      <option value="MobiAI">MobiAI</option>
+                      <option value="MobiPA">MobiPA</option>
+                      <option value="Saymee">Saymee</option>
+                      <option value="iCall">iCall</option>
+                      <option value="MobiGames">MobiGames</option>
+                      <option value="MobiOn">MobiOn</option>
+                      <option value="MobiEdu">MobiEdu</option>
+                      <option value="MobiAgri">MobiAgri</option>
+                      <option value="Trở thành triệu phú">Trở thành triệu phú</option>
+                      <option value="Cổng Thông tin Giải trí Việt _My Foto (9050)">
+                        Cổng Thông tin Giải trí Việt _My Foto (9050)
+                      </option>
+                      <option value="Mobi Radio">Mobi Radio</option>
+                      <option value="Quà tặng âm nhạc">Quà tặng âm nhạc</option>
+                      <option value="iBolero">iBolero</option>
+                    </select>
+                  </div>
+                  <div class="field-group">
+                    <label>Loại thuê bao</label>
+                    <select name="LOAI_TB" id="LoaiThueBao_GTGT" required>
+                      <option value="">-- Chọn loại thuê bao --</option>
+                      <option value="KHCN">KHCN</option>
+                      <option value="KHDN">KHDN</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              <!-- Dịch vụ GTGT -->
-              <h2 class="section-title">Dịch vụ GTGT</h2>
-              <div class="row">
-                <div class="field-group">
-                  <label>Dịch vụ GTGT:</label>
-                  <select name="DICH_VU_GTGT" id="DichVuGTGT" required>
-                    <option value="">-- Chọn dịch vụ GTGT --</option>
-                    <option value="MobiAI">MobiAI</option>
-                    <option value="MobiPA">MobiPA</option>
-                    <option value="Saymee">Saymee</option>
-                    <option value="iCall">iCall</option>
-                    <option value="MobiGames">MobiGames</option>
-                    <option value="MobiOn">MobiOn</option>
-                    <option value="MobiEdu">MobiEdu</option>
-                    <option value="MobiAgri">MobiAgri</option>
-                    <option value="Trở thành triệu phú">Trở thành triệu phú</option>
-                    <option value="Cổng Thông tin Giải trí Việt _My Foto (9050)">
-                      Cổng Thông tin Giải trí Việt _My Foto (9050)
-                    </option>
-                    <option value="Mobi Radio">Mobi Radio</option>
-                    <option value="Quà tặng âm nhạc">Quà tặng âm nhạc</option>
-                    <option value="iBolero">iBolero</option>
-                  </select>
-                </div>
-                <div class="field-group">
-                  <label>Loại thuê bao:</label>
-                  <select name="LOAI_TB" id="LoaiThueBao_GTGT" required>
-                    <option value="">-- Chọn loại thuê bao --</option>
-                    <option value="KHCN">KHCN</option>
-                    <option value="KHDN">KHDN</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- MAIL GTGT -->
+              <!-- CARD 6: Thông tin gửi mail -->
               <div class="info-panel">
                 <div class="info-panel-header">
                   <h3>Thông tin gửi mail</h3>
-                  <p>Tự động sinh Email CN, Email DV GTGT, Subject và nội dung mail.</p>
+                  <p>Tự động sinh Email CN, Email DV GTGT, Subject, Note và nội dung mail.</p>
                 </div>
 
                 <div class="info-row">
@@ -238,83 +265,111 @@
           <!-- TAB 2: PHỤ LỤC 1 BNKN -->
           <div class="tab-content" id="tab-bnkn">
             <form id="bnknForm">
-              <h2 class="section-title">Thông tin văn bản</h2>
-              <div class="row">
-                <div class="field-group" style="flex: 2">
-                  <label>Số công văn:</label>
-                  <input type="number" name="SoCV" required />
-                  <div class="help-text">Ví dụ: 1234</div>
+              <!-- CARD 1 -->
+              <div class="group-card theme-blue">
+                <h2 class="section-title group-title">
+                  <span class="group-icon">📄</span>
+                  <span>Thông tin văn bản</span>
+                </h2>
+                <div class="row">
+                  <div class="field-group" style="flex: 2">
+                    <label>Số công văn</label>
+                    <input type="number" name="SoCV" required />
+                    <div class="help-text">Ví dụ: 1234</div>
+                  </div>
+
+                  <div class="field-group">
+                    <label>Ngày văn bản</label>
+                    <input type="date" id="NgayFull_BNKN" name="NgayFull_BNKN" required />
+                  </div>
+                </div>
+              </div>
+
+              <!-- CARD 2: Người khiếu nại & Khách hàng -->
+              <div class="group-card theme-green">
+                <h2 class="section-title group-title">
+                  <span class="group-icon">👥</span>
+                  <span>Thông tin người khiếu nại & khách hàng</span>
+                </h2>
+
+                <div class="row">
+                  <div class="field-group">
+                    <label>Họ tên người khiếu nại</label>
+                    <input type="text" name="HO_TEN_KN" required />
+                  </div>
+
+                  <div class="field-group">
+                    <label>CMND/CCCD người khiếu nại</label>
+                    <input type="text" name="CCCD_KN" />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="field-group">
+                    <label>Tên khách hàng</label>
+                    <input type="text" name="HO_TEN_KH" required />
+                  </div>
+
+                  <div class="field-group">
+                    <label>CMND/CCCD khách hàng</label>
+                    <input type="text" name="CCCD_KH" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- CARD 3: Thuê bao & liên hệ -->
+              <div class="group-card theme-amber">
+                <h2 class="section-title group-title">
+                  <span class="group-icon">📱</span>
+                  <span>Thuê bao & liên hệ</span>
+                </h2>
+
+                <div class="row">
+                  <div class="field-group">
+                    <label>Số thuê bao</label>
+                    <input type="number" name="SO_THUE_BAO" required />
+                  </div>
                 </div>
 
                 <div class="field-group">
-                  <label>Ngày văn bản:</label>
-                  <input type="date" id="NgayFull_BNKN" name="NgayFull_BNKN" required />
-                </div>
-              </div>
-
-              <h2 class="section-title">Thông tin khiếu nại</h2>
-
-              <div class="row">
-                <div class="field-group">
-                  <label>Họ tên người khiếu nại:</label>
-                  <input type="text" name="HO_TEN_KN" required />
+                  <label>Địa chỉ</label>
+                  <input type="text" name="DIA_CHI" required />
                 </div>
 
                 <div class="field-group">
-                  <label>CMND/CCCD người khiếu nại (có thể để trống):</label>
-                  <input type="text" name="CCCD_KN" />
+                  <label>Số điện thoại liên hệ</label>
+                  <input type="text" name="SO_LIEN_HE" required />
                 </div>
               </div>
 
-              <div class="row">
+              <!-- CARD 4: Nội dung & giấy tờ -->
+              <div class="group-card theme-rose">
+                <h2 class="section-title group-title">
+                  <span class="group-icon">📝</span>
+                  <span>Nội dung & giấy tờ</span>
+                </h2>
+
                 <div class="field-group">
-                  <label>Tên khách hàng:</label>
-                  <input type="text" name="HO_TEN_KH" required />
+                  <label>Nội dung khách hàng phản ánh</label>
+                  <textarea name="NOI_DUNG_KHIEU_NAI" required></textarea>
                 </div>
 
                 <div class="field-group">
-                  <label>CMND/CCCD khách hàng (có thể để trống):</label>
-                  <input type="text" name="CCCD_KH" />
+                  <label>Giấy tờ / Kết quả trả lời kèm theo</label>
+                  <textarea name="KQ_TRA_LOI" required></textarea>
                 </div>
               </div>
 
-              <div class="row">
-                <div class="field-group">
-                  <label>Số thuê bao:</label>
-                  <input type="number" name="SO_THUE_BAO" required />
-                </div>
-              </div>
-
-              <div class="field-group">
-                <label>Địa chỉ:</label>
-                <input type="text" name="DIA_CHI" required />
-              </div>
-
-              <div class="field-group">
-                <label>Số điện thoại liên hệ:</label>
-                <input type="text" name="SO_LIEN_HE" required />
-              </div>
-
-              <div class="field-group">
-                <label>Nội dung khách hàng phản ánh:</label>
-                <textarea name="NOI_DUNG_KHIEU_NAI" required></textarea>
-              </div>
-
-              <div class="field-group">
-                <label>Giấy tờ / Kết quả trả lời kèm theo:</label>
-                <textarea name="KQ_TRA_LOI" required></textarea>
-              </div>
-
-              <!-- MAIL BNKN -->
+              <!-- CARD 5: Thông tin gửi mail -->
               <div class="info-panel">
                 <div class="info-panel-header">
-                  <h3>Thông tin gửi mail</h3>
-                  <p>Tự sinh Email chi nhánh, Subject BNKN và nội dung mail mẫu.</p>
+                  <h3>Thông tin gửi mail (Phụ lục 1)</h3>
+                  <p>Tự sinh Email chi nhánh, Subject BNKN, Note và nội dung mail mẫu.</p>
                 </div>
 
                 <div class="row compact-row">
                   <div class="field-group">
-                    <label>Chi nhánh xử lý:</label>
+                    <label>Chi nhánh xử lý</label>
                     <select id="TenChiNhanh_BNKN" name="TEN_CN_BNKN">
                       <option value="">-- Chọn chi nhánh --</option>
                       <option value="Sài Gòn">Sài Gòn</option>
@@ -325,7 +380,7 @@
                     </select>
                   </div>
                   <div class="field-group">
-                    <label>Loại thuê bao:</label>
+                    <label>Loại thuê bao</label>
                     <select id="LoaiThueBao_BNKN" name="LOAI_TB_BNKN">
                       <option value="">-- Chọn loại thuê bao --</option>
                       <option value="KHCN">KHCN</option>
@@ -334,14 +389,14 @@
                   </div>
                 </div>
 
+                <div class="field-group">
+                  <label>Tên gói (dùng trong subject mail)</label>
+                  <input type="text" id="TenGoi_BNKN" />
+                </div>
+
                 <div class="info-row">
                   <span class="info-label">Email chi nhánh:</span>
                   <span class="info-value" id="EmailChiNhanh_BNKN">-</span>
-                </div>
-
-                <div class="field-group">
-                  <label>Tên gói (dùng trong subject mail):</label>
-                  <input type="text" id="TenGoi_BNKN" />
                 </div>
 
                 <div class="info-row">
@@ -378,81 +433,109 @@
           <!-- TAB 3: PHỤ LỤC 2 -->
           <div class="tab-content" id="tab-pl2">
             <form id="pl2Form">
-              <h2 class="section-title">Thông tin văn bản</h2>
-              <div class="row">
-                <div class="field-group" style="flex: 2">
-                  <label>Số công văn:</label>
-                  <input type="number" name="SoCV" required />
-                  <div class="help-text">Ví dụ: 1234</div>
-                </div>
-                <div class="field-group">
-                  <label>Ngày văn bản:</label>
-                  <input type="date" id="NgayFull_PL2" name="NgayFull_PL2" required />
-                </div>
-              </div>
-
-              <h2 class="section-title">Thông tin khiếu nại</h2>
-
-              <div class="row">
-                <div class="field-group">
-                  <label>Họ tên người khiếu nại:</label>
-                  <input type="text" name="HO_TEN_KN" required />
-                </div>
-                <div class="field-group">
-                  <label>CMND/CCCD người KN (có thể để trống):</label>
-                  <input type="text" name="CCCD_KN" />
+              <!-- CARD 1 -->
+              <div class="group-card theme-blue">
+                <h2 class="section-title group-title">
+                  <span class="group-icon">📄</span>
+                  <span>Thông tin văn bản</span>
+                </h2>
+                <div class="row">
+                  <div class="field-group" style="flex: 2">
+                    <label>Số công văn</label>
+                    <input type="number" name="SoCV" required />
+                    <div class="help-text">Ví dụ: 1234</div>
+                  </div>
+                  <div class="field-group">
+                    <label>Ngày văn bản</label>
+                    <input type="date" id="NgayFull_PL2" name="NgayFull_PL2" required />
+                  </div>
                 </div>
               </div>
 
-              <div class="row">
-                <div class="field-group">
-                  <label>Tên khách hàng:</label>
-                  <input type="text" name="HO_TEN_KH" required />
+              <!-- CARD 2: Người khiếu nại & KH -->
+              <div class="group-card theme-green">
+                <h2 class="section-title group-title">
+                  <span class="group-icon">👥</span>
+                  <span>Thông tin người khiếu nại & khách hàng</span>
+                </h2>
+
+                <div class="row">
+                  <div class="field-group">
+                    <label>Họ tên người khiếu nại</label>
+                    <input type="text" name="HO_TEN_KN" required />
+                  </div>
+                  <div class="field-group">
+                    <label>CMND/CCCD người khiếu nại</label>
+                    <input type="text" name="CCCD_KN" />
+                  </div>
                 </div>
-                <div class="field-group">
-                  <label>CMND/CCCD khách hàng (có thể để trống):</label>
-                  <input type="text" name="CCCD_KH" />
+
+                <div class="row">
+                  <div class="field-group">
+                    <label>Tên khách hàng</label>
+                    <input type="text" name="HO_TEN_KH" required />
+                  </div>
+                  <div class="field-group">
+                    <label>CMND/CCCD khách hàng</label>
+                    <input type="text" name="CCCD_KH" />
+                  </div>
                 </div>
               </div>
 
-              <div class="row">
-                <div class="field-group">
-                  <label>Số thuê bao KH:</label>
-                  <input type="number" name="SO_THUE_BAO_KH" required />
-                  <div class="help-text">Phải đủ 9 số, không có số 0 ở đầu (VD: 903xxxxxx).</div>
+              <!-- CARD 3: Thuê bao & liên hệ -->
+              <div class="group-card theme-amber">
+                <h2 class="section-title group-title">
+                  <span class="group-icon">📱</span>
+                  <span>Thuê bao & liên hệ</span>
+                </h2>
+
+                <div class="row">
+                  <div class="field-group">
+                    <label>Số thuê bao KH</label>
+                    <input type="number" name="SO_THUE_BAO_KH" required />
+                    <div class="help-text">Phải đủ 9 số, không có số 0 ở đầu (VD: 903xxxxxx).</div>
+                  </div>
+                  <div class="field-group">
+                    <label>Số điện thoại liên hệ</label>
+                    <input type="number" name="SO_THUE_BAO_LH" required />
+                    <div class="help-text">Phải đủ 9 số, không có số 0 ở đầu (VD: 903xxxxxx).</div>
+                  </div>
                 </div>
+
                 <div class="field-group">
-                  <label>Số điện thoại liên hệ:</label>
-                  <input type="number" name="SO_THUE_BAO_LH" required />
-                  <div class="help-text">Phải đủ 9 số, không có số 0 ở đầu (VD: 903xxxxxx).</div>
+                  <label>Địa chỉ</label>
+                  <input type="text" name="DIA_CHI" required />
                 </div>
               </div>
 
-              <div class="field-group">
-                <label>Địa chỉ:</label>
-                <input type="text" name="DIA_CHI" required />
+              <!-- CARD 4: Nội dung & xử lý -->
+              <div class="group-card theme-rose">
+                <h2 class="section-title group-title">
+                  <span class="group-icon">📝</span>
+                  <span>Nội dung & xử lý</span>
+                </h2>
+
+                <div class="field-group">
+                  <label>Khiếu nại về việc</label>
+                  <textarea name="NOI_DUNG_KN" required></textarea>
+                </div>
+
+                <div class="field-group">
+                  <label>Điện thoại viên đã giải thích</label>
+                  <textarea name="KQ_XLV" required></textarea>
+                </div>
               </div>
 
-              <div class="field-group">
-                <label>Khiếu nại về việc:</label>
-                <textarea name="NOI_DUNG_KN" required></textarea>
-              </div>
-
-              <div class="field-group">
-                <label>Điện thoại viên đã giải thích:</label>
-                <textarea name="KQ_XLV" required></textarea>
-              </div>
-
-              <!-- MAIL PL2 -->
+              <!-- CARD 5: Thông tin gửi mail -->
               <div class="info-panel">
                 <div class="info-panel-header">
                   <h3>Thông tin gửi mail (Phụ lục 2)</h3>
-                  <p>Tự sinh Email chi nhánh, Subject & nội dung mail BNKN.</p>
+                  <p>Tự sinh Email chi nhánh, Subject, Note & nội dung mail.</p>
                 </div>
 
                 <div class="row compact-row">
                   <div class="field-group">
-                    <label>Chi nhánh xử lý:</label>
+                    <label>Chi nhánh xử lý</label>
                     <select id="TenChiNhanh_PL2" name="TEN_CN_PL2">
                       <option value="">-- Chọn chi nhánh --</option>
                       <option value="Sài Gòn">Sài Gòn</option>
@@ -463,7 +546,7 @@
                     </select>
                   </div>
                   <div class="field-group">
-                    <label>Loại thuê bao:</label>
+                    <label>Loại thuê bao</label>
                     <select id="LoaiThueBao_PL2" name="LOAI_TB_PL2">
                       <option value="">-- Chọn loại thuê bao --</option>
                       <option value="KHCN">KHCN</option>
@@ -472,14 +555,14 @@
                   </div>
                 </div>
 
+                <div class="field-group">
+                  <label>Tên gói (dùng trong subject mail)</label>
+                  <input type="text" id="TenGoi_PL2" />
+                </div>
+
                 <div class="info-row">
                   <span class="info-label">Email chi nhánh:</span>
                   <span class="info-value" id="EmailChiNhanh_PL2">-</span>
-                </div>
-
-                <div class="field-group">
-                  <label>Tên gói (dùng trong subject mail):</label>
-                  <input type="text" id="TenGoi_PL2" />
                 </div>
 
                 <div class="info-row">
@@ -529,8 +612,19 @@
 
             <div class="table-wrapper">
               <table class="lookup-table" id="CNTable">
-                <thead id="CNThead"></thead>
-                <tbody id="CNBody"></tbody>
+                <thead id="CNThead">
+                  <tr>
+                    <th>STT</th>
+                    <th>Chi nhánh</th>
+                    <th>Mã CN</th>
+                    <th>Địa chỉ</th>
+                    <th>Quận/Huyện</th>
+                    <th>Khu vực</th>
+                  </tr>
+                </thead>
+                <tbody id="CNBody">
+                  <!-- script.js sẽ render dữ liệu từ DanhsachCN.xlsx -->
+                </tbody>
               </table>
             </div>
           </div>
@@ -538,7 +632,7 @@
       </div>
     </div>
 
-    <!-- Overlay tiến trình export Word -->
+    <!-- Overlay tiến trình xuất Word -->
     <div id="progressOverlay" class="progress-overlay">
       <div class="progress-card">
         <div class="progress-spinner"></div>
