@@ -1,4 +1,4 @@
-const GEMINI_API_KEY = 'AIzaSyCZI14RoHs05bE4rN-klj45pLxyDwzlzSk';
+const GEMINI_API_KEY = 'AIzaSyCGRQ33kI73mjarBCMyxhaYJHu2zxHo09Y';
 const GEMINI_MODEL_TAB4 = 'gemini-2.5-flash';
 
 // ==== KHỞI TẠO TABS & FORM ====
