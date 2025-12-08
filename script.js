@@ -63,6 +63,38 @@ function updateBranchEmailFor(tabSuffix) {
   }
 }
 
+// ===== NOTE CHUNG CHO 3 TAB =====
+function buildNoteText(chiNhanh, soCV) {
+  if (chiNhanh && soCV) {
+    return `Ghi nhận chuyển GQKN ${chiNhanh} hỗ trợ BNKN ${soCV}. ACE báo KH vui lòng theo dõi thêm, khi có kết quả từ GQKN sẽ có nhân viên liên hệ KH.`;
+  }
+  return '-';
+}
+
+function updateNoteGTGT() {
+  const cn = document.getElementById('TenChiNhanh_GTGT')?.value.trim() || '';
+  const soCV = document.querySelector('#tab-gtgt [name="SoCV"]')?.value.trim() || '';
+  const noteEl = document.getElementById('EmailNote_GTGT');
+  if (!noteEl) return;
+  noteEl.textContent = buildNoteText(cn, soCV);
+}
+
+function updateNoteBNKN() {
+  const cn = document.getElementById('TenChiNhanh_BNKN')?.value.trim() || '';
+  const soCV = document.querySelector('#tab-bnkn [name="SoCV"]')?.value.trim() || '';
+  const noteEl = document.getElementById('EmailNote_BNKN');
+  if (!noteEl) return;
+  noteEl.textContent = buildNoteText(cn, soCV);
+}
+
+function updateNotePL2() {
+  const cn = document.getElementById('TenChiNhanh_PL2')?.value.trim() || '';
+  const soCV = document.querySelector('#tab-pl2 [name="SoCV"]')?.value.trim() || '';
+  const noteEl = document.getElementById('EmailNote_PL2');
+  if (!noteEl) return;
+  noteEl.textContent = buildNoteText(cn, soCV);
+}
+
 // clear lỗi trực quan
 function clearFormErrors(formElement) {
   if (!formElement) return;
@@ -91,6 +123,9 @@ function syncBranchAndTypeFromGTGT() {
 
   updateBranchEmailFor('BNKN');
   updateBranchEmailFor('PL2');
+  // cập nhật Note theo CN + SoCV sau khi sync
+  updateNoteBNKN();
+  updateNotePL2();
 }
 
 // Copy nội dung mail
@@ -166,7 +201,7 @@ function updateSubjectGTGT() {
   if (!el) return;
 
   if (soCV && soTB && nhomDV && goiDV) {
-    el.textContent = `Hỗ trợ KN CV${soCV} - ${soTB} - ${nhomDV} ${goiDV}`;
+    el.textContent = `Hỗ trợ BNKN ${soCV} - ${soTB} - ${nhomDV} ${goiDV}`;
   } else {
     el.textContent = '-';
   }
@@ -206,7 +241,13 @@ function updateGTGTEmailContact() {
 }
 
 function resetMailPanelGTGT() {
-  ['EmailChiNhanh_GTGT', 'EmailGTGT_GTGT', 'EmailSubject_GTGT', 'EmailBody_GTGT'].forEach((id) => {
+  [
+    'EmailChiNhanh_GTGT',
+    'EmailGTGT_GTGT',
+    'EmailSubject_GTGT',
+    'EmailBody_GTGT',
+    'EmailNote_GTGT'
+  ].forEach((id) => {
     const el = document.getElementById(id);
     if (el) el.textContent = '-';
   });
@@ -273,12 +314,14 @@ function initGTGTForm() {
     loaiTB.addEventListener('change', () => {
       updateBranchEmailFor('GTGT');
       syncBranchAndTypeFromGTGT();
+      updateNoteGTGT();
     });
 
   if (cn)
     cn.addEventListener('change', () => {
       updateBranchEmailFor('GTGT');
       syncBranchAndTypeFromGTGT();
+      updateNoteGTGT();
     });
 
   if (dv) dv.addEventListener('change', updateGTGTEmailContact);
@@ -293,6 +336,7 @@ function initGTGTForm() {
       el.addEventListener('input', () => {
         updateSubjectGTGT();
         updateEmailBodyGTGT();
+        updateNoteGTGT();
       });
     }
   });
@@ -334,7 +378,7 @@ function initGTGTForm() {
       const soCV = (data['SoCV'] || '').replace(/\s+/g, '');
       const soTB = (data['SO_THUE_BAO'] || '').replace(/\s+/g, '');
       const tenNhom = (data['TEN_NHOM_DV'] || '').replace(/\s+/g, '');
-      saveAs(out, `CV${soCV}_${soTB}_${tenNhom}.docx`);
+      saveAs(out, `BNKN ${soCV}_${soTB}_${tenNhom}.docx`);
     });
   });
 }
@@ -350,7 +394,7 @@ function resetGTGTForm() {
 
 // ==== TAB 2: BNKN ====
 function resetMailPanelBNKN() {
-  ['EmailChiNhanh_BNKN', 'EmailSubject_BNKN', 'EmailBody_BNKN'].forEach((id) => {
+  ['EmailChiNhanh_BNKN', 'EmailSubject_BNKN', 'EmailBody_BNKN', 'EmailNote_BNKN'].forEach((id) => {
     const el = document.getElementById(id);
     if (el) el.textContent = '-';
   });
@@ -445,14 +489,22 @@ function initBNKNForm() {
   const cn = document.getElementById('TenChiNhanh_BNKN');
 
   if (loaiTB) loaiTB.addEventListener('change', () => updateBranchEmailFor('BNKN'));
-  if (cn) cn.addEventListener('change', () => updateBranchEmailFor('BNKN'));
+  if (cn)
+    cn.addEventListener('change', () => {
+      updateBranchEmailFor('BNKN');
+      updateNoteBNKN();
+    });
 
   const soCVInput = document.querySelector('#tab-bnkn [name="SoCV"]');
   const soTBInput = document.querySelector('#tab-bnkn [name="SO_THUE_BAO"]');
   const tenGoiInput = document.getElementById('TenGoi_BNKN');
 
   [soCVInput, soTBInput, tenGoiInput].forEach((el) => {
-    if (el) el.addEventListener('input', updateMailBNKN);
+    if (el)
+      el.addEventListener('input', () => {
+        updateMailBNKN();
+        updateNoteBNKN();
+      });
   });
 
   form.addEventListener('submit', (e) => {
@@ -503,7 +555,7 @@ function resetBNKNForm() {
 
 // ==== TAB 3: PHỤ LỤC 2 ====
 function resetMailPanelPL2() {
-  ['EmailChiNhanh_PL2', 'EmailSubject_PL2', 'EmailBody_PL2'].forEach((id) => {
+  ['EmailChiNhanh_PL2', 'EmailSubject_PL2', 'EmailBody_PL2', 'EmailNote_PL2'].forEach((id) => {
     const el = document.getElementById(id);
     if (el) el.textContent = '-';
   });
@@ -610,14 +662,22 @@ function initPL2Form() {
   const cn = document.getElementById('TenChiNhanh_PL2');
 
   if (loaiTB) loaiTB.addEventListener('change', () => updateBranchEmailFor('PL2'));
-  if (cn) cn.addEventListener('change', () => updateBranchEmailFor('PL2'));
+  if (cn)
+    cn.addEventListener('change', () => {
+      updateBranchEmailFor('PL2');
+      updateNotePL2();
+    });
 
   const soCVInput = document.querySelector('#tab-pl2 [name="SoCV"]');
   const soTBInput = document.querySelector('#tab-pl2 [name="SO_THUE_BAO_KH"]');
   const tenGoiInput = document.getElementById('TenGoi_PL2');
 
   [soCVInput, soTBInput, tenGoiInput].forEach((el) => {
-    if (el) el.addEventListener('input', updateMailPL2);
+    if (el)
+      el.addEventListener('input', () => {
+        updateMailPL2();
+        updateNotePL2();
+      });
   });
 
   form.addEventListener('submit', (e) => {
@@ -740,7 +800,7 @@ function renderCNTable(rows, keyword = '') {
     .join('');
 }
 
-// ⬇️ HÀM CHÍNH BẠN DÁN ĐÈ VÀO ĐÂY
+// ⬇️ Load DS chi nhánh
 function loadDanhSachCN() {
   const thead = document.getElementById('CNThead');
   const tbody = document.getElementById('CNBody');
