@@ -21,6 +21,14 @@ const BRANCH_EMAILS = {
   'Thủ Đức': {
     KHCN: '"Nguyen Nhu Thuy" <thuy.nhu@mobifone.vn>',
     KHDN: 'lien.ntb@mobifone.vn'
+  },
+  'Bình Dương': {
+    KHCN: 'Thuý Duy: duy.nguyenthi@mobifone.vn',
+    KHDN: 'Thuý Duy: duy.nguyenthi@mobifone.vn'
+  },
+  'Vũng Tàu': {
+    KHCN: 'Thu.doan@mobifone.vn',
+    KHDN: 'Thu.doan@mobifone.vn'
   }
 };
 
