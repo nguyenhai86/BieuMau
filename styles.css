@@ -643,3 +643,53 @@ body {
     transform: translateX(0);
   }
 }
+/* ===== AI tools (Gemini) trong tab 4 ===== */
+.ai-panel {
+  margin-top: 8px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px dashed rgba(37, 99, 235, 0.4);
+  background: radial-gradient(circle at top left, #eff6ff, #f9fafb 45%, #ffffff);
+}
+
+.ai-panel-title {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.ai-buttons {
+  margin-top: 6px;
+  gap: 8px;
+}
+
+.ai-result {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.ai-result p {
+  margin: 2px 0;
+}
+
+.ai-result strong {
+  font-weight: 600;
+  color: #111827;
+}
+
+.ai-result-placeholder {
+  font-style: italic;
+  color: #6b7280;
+}
+
+.ai-result-error {
+  color: #b91c1c;
+  font-weight: 500;
+}

@@ -1,3 +1,8 @@
+const GEMINI_API_KEY = 'AIzaSyCZI14RoHs05bE4rN-klj45pLxyDwzlzSk';
+const GEMINI_MODEL_TAB4 = 'gemini-2.5-flash';
+// const GEMINI_MODEL_TAB4 = "gemini-2.5-pro";
+// const GEMINI_MODEL_TAB4 = 'gemini-2.5-flash-live';
+
 // ==== KHỞI TẠO TABS & FORM ====
 document.addEventListener('DOMContentLoaded', () => {
   const tabButtons = document.querySelectorAll('.tab-button');
@@ -34,6 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (searchCN) {
     searchCN.addEventListener('input', handleSearchCNInput);
   }
+
+  // Khởi tạo công cụ Gemini cho Tab 4
+  setupAIToolsTab4();
 });
 
 // ==== COMMON HELPERS ====
@@ -740,9 +748,21 @@ function normalizeVN(str) {
     .trim();
 }
 
-// ===== TAB 4: DANH SÁCH CHI NHÁNH (DanhsachCN.xlsx) =====
+// ===== TAB 4: DANH SÁCH CHI NHÁNH & GEMINI (DanhsachCN.xlsx) =====
 let CN_DATA = [];
 let CN_HEADERS = [];
+
+// Các header dùng để dự đoán TTKD (tự bắt theo tên cột trong Excel)
+let CN_HEADER_TTKD = null;
+let CN_HEADER_XA = null;
+let CN_HEADER_QUAN = null;
+
+// Tìm tên cột có chứa keyword (đã bỏ dấu)
+function findHeaderByKeyword(keyword) {
+  if (!CN_HEADERS || !CN_HEADERS.length) return null;
+  const kwNorm = normalizeVN(keyword);
+  return CN_HEADERS.find((h) => normalizeVN(h).includes(kwNorm)) || null;
+}
 
 // highlight keyword (case-insensitive, theo đúng chữ user gõ)
 function highlightKeyword(text, keyword) {
@@ -752,7 +772,7 @@ function highlightKeyword(text, keyword) {
   return text.toString().replace(re, (m) => `<mark>${m}</mark>`);
 }
 
-// Tính điểm similarity cho 1 dòng
+// Tính điểm similarity cho 1 dòng (dùng cho search)
 function scoreCNRow(item, queryNorm, tokens) {
   if (!queryNorm) return 0;
   let score = 0;
@@ -762,7 +782,6 @@ function scoreCNRow(item, queryNorm, tokens) {
   else if (all.startsWith(queryNorm)) score += 75;
   else if (all.includes(queryNorm)) score += 40;
 
-  // theo từng từ & từng cột
   tokens.forEach((t) => {
     if (!t) return;
     CN_HEADERS.forEach((h) => {
@@ -790,7 +809,7 @@ function renderCNTable(rows, keyword = '') {
 
   tbody.innerHTML = rows
     .map((item, idx) => {
-      const stt = idx + 1; // STT theo thứ tự đang hiển thị
+      const stt = idx + 1;
       const tds = CN_HEADERS.map((h) => {
         const txt = item.cells[h] ?? '';
         return `<td>${highlightKeyword(txt, keyword)}</td>`;
@@ -800,7 +819,7 @@ function renderCNTable(rows, keyword = '') {
     .join('');
 }
 
-// ⬇️ Load DS chi nhánh
+// Load DanhsachCN.xlsx
 function loadDanhSachCN() {
   const thead = document.getElementById('CNThead');
   const tbody = document.getElementById('CNBody');
@@ -831,8 +850,13 @@ function loadDanhSachCN() {
         return;
       }
 
-      // ✅ Lọc bỏ cột rác kiểu _EMPTY, __EMPTY_1,...
+      // Lọc bỏ cột rác kiểu _EMPTY, __EMPTY_1,...
       CN_HEADERS = Object.keys(rows[0] || {}).filter((h) => h && !/^_+EMPTY/i.test(h));
+
+      // Đoán tên cột TTKD / Xã phường / Quận huyện
+      CN_HEADER_TTKD = findHeaderByKeyword('ten ttkd');
+      CN_HEADER_XA = findHeaderByKeyword('xa phuong');
+      CN_HEADER_QUAN = findHeaderByKeyword('quan/huyen');
 
       // Header bảng (thêm cột STT phía trước)
       thead.innerHTML =
@@ -863,6 +887,68 @@ function loadDanhSachCN() {
       tbody.innerHTML =
         '<tr><td colspan="100" class="table-placeholder" style="color:#b91c1c;">Không đọc được file DanhsachCN.xlsx. Vui lòng kiểm tra lại tên file và vị trí.</td></tr>';
     });
+}
+
+// Tìm Tên TTKD phù hợp nhất dựa trên địa chỉ đã chuẩn hóa
+function findBestTTKD(normalizedAddress) {
+  if (!normalizedAddress) {
+    return {
+      ttkdName: '',
+      reasoning: 'Không có địa chỉ chuẩn hóa để so khớp.'
+    };
+  }
+
+  if (!CN_DATA.length) {
+    return {
+      ttkdName: '',
+      reasoning: 'Chưa load được dữ liệu DanhsachCN.xlsx (CN_DATA rỗng).'
+    };
+  }
+
+  if (!CN_HEADER_TTKD || !CN_HEADER_XA || !CN_HEADER_QUAN) {
+    return {
+      ttkdName: '',
+      reasoning:
+        'Không tìm thấy đầy đủ cột Tên TTKD / Xã Phường / Quận Huyện trong DanhsachCN.xlsx.'
+    };
+  }
+
+  const addrNorm = normalizeVN(normalizedAddress);
+  let best = null;
+
+  CN_DATA.forEach((row) => {
+    const ward = row.cells[CN_HEADER_XA] || '';
+    const district = row.cells[CN_HEADER_QUAN] || '';
+    const ttkd = row.cells[CN_HEADER_TTKD] || '';
+
+    if (!ttkd) return;
+
+    const wardNorm = normalizeVN(ward);
+    const distNorm = normalizeVN(district);
+
+    let score = 0;
+    if (wardNorm && addrNorm.includes(wardNorm)) score += 60;
+    if (distNorm && addrNorm.includes(distNorm)) score += 40;
+    if (wardNorm && distNorm && addrNorm.includes(wardNorm) && addrNorm.includes(distNorm)) {
+      score += 20;
+    }
+
+    if (score > 0) {
+      if (!best || score > best.score) {
+        best = { ttkdName: ttkd, ward, district, score };
+      }
+    }
+  });
+
+  if (!best) {
+    return {
+      ttkdName: '',
+      reasoning: 'Không tìm được TTKD nào khớp rõ ràng với phường/quận trong địa chỉ chuẩn hóa.'
+    };
+  }
+
+  const reasoning = `Địa chỉ chuẩn hóa có chứa "${best.ward}" và "${best.district}" nên chọn Tên TTKD "${best.ttkdName}".`;
+  return { ttkdName: best.ttkdName, reasoning };
 }
 
 // Xử lý khi gõ tìm kiếm
@@ -898,5 +984,196 @@ function handleSearchCNInput(e) {
     renderCNTable([], keyword);
   } else {
     renderCNTable(matched, keyword);
+  }
+}
+
+// ===== TAB 4: TÍCH HỢP GEMINI (CHUẨN HÓA ĐỊA CHỈ + DỰ ĐOÁN TTKD) =====
+
+// Gắn event cho 2 nút Gemini
+function setupAIToolsTab4() {
+  const btnNorm = document.getElementById('btnNormalizeAddress');
+  const btnTTKD = document.getElementById('btnPredictTTKD');
+
+  if (btnNorm) btnNorm.addEventListener('click', handleNormalizeAddress);
+  if (btnTTKD) btnTTKD.addEventListener('click', handlePredictTTKD);
+}
+
+// UI helper
+function showAIStatus(message) {
+  const box = document.getElementById('aiResult');
+  if (!box) return;
+  box.innerHTML = `<p>${message}</p>`;
+}
+
+// Nút Chuẩn hóa: chỉ hiển thị 1 dòng
+function showNormalizedAddress(normalizedAddress) {
+  const box = document.getElementById('aiResult');
+  if (!box) return;
+
+  const addr = normalizedAddress || '-';
+  box.innerHTML = `<p><strong>Địa chỉ chuẩn hóa:</strong> ${addr}</p>`;
+}
+
+// Nút Dự đoán TTKD: hiển thị full thông tin
+function showAIResult({ normalizedAddress, ttkdName, reasoning }) {
+  const box = document.getElementById('aiResult');
+  if (!box) return;
+
+  const norm = normalizedAddress || '-';
+  const ttkd = ttkdName || '(không xác định được từ danh sách)';
+  const reason = reasoning || 'Không có giải thích.';
+
+  box.innerHTML = `
+    <p><strong>Địa chỉ chuẩn hóa:</strong> ${norm}</p>
+    <p><strong>Tên TTKD mới đề xuất:</strong> ${ttkd}</p>
+    <p><strong>Lý do chọn TTKD:</strong></p>
+    <p>${reason.replace(/\n/g, '<br>')}</p>
+  `;
+}
+
+function showAIError(errorMessage) {
+  const box = document.getElementById('aiResult');
+  if (!box) return;
+  box.innerHTML = `<p class="ai-result-error">${errorMessage}</p>`;
+}
+
+// Gọi Gemini để CHỈ chuẩn hóa địa chỉ
+async function callGeminiNormalize(rawAddress) {
+  if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_API_KEY_HERE') {
+    throw new Error('Chưa cấu hình GEMINI_API_KEY trong script.js');
+  }
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL_TAB4}:generateContent?key=${encodeURIComponent(
+    GEMINI_API_KEY
+  )}`;
+
+  const instruction = `
+Bạn là trợ lý nội bộ của Tổng Công ty Viễn thông MobiFone tại TP.HCM.
+Nhiệm vụ: Chuẩn hóa địa chỉ khách hàng cung cấp về dạng đầy đủ, có dấu, chuẩn bưu chính Việt Nam.
+- Bổ sung đầy đủ: số nhà (nếu có), tên đường, khu phố/ấp, phường/xã, quận/huyện, thành phố.
+- Ưu tiên nhận diện địa chỉ tại TP. Hồ Chí Minh (cityHint: TP.HCM).
+- Nếu địa chỉ không đủ thông tin, cố gắng suy luận nhưng không bịa sai quận/phường.
+- Nếu không thể suy luận, giữ nguyên phần không đoán được.
+
+ĐỊA CHỈ THÔ:
+${rawAddress}
+
+YÊU CẦU ĐỊNH DẠNG:
+Trả về DUY NHẤT một chuỗi JSON với cấu trúc:
+
+{
+  "normalizedAddress": "địa chỉ đã chuẩn hóa, có dấu, đầy đủ"
+}
+
+Không thêm bất kỳ chữ nào ngoài JSON (không thêm giải thích trước/sau).
+  `.trim();
+
+  const payload = {
+    contents: [
+      {
+        parts: [{ text: instruction }]
+      }
+    ]
+  };
+
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  if (!resp.ok) {
+    const text = await resp.text().catch(() => '');
+    console.error('Gemini error body:', text);
+    throw new Error(`Lỗi gọi Gemini API: ${resp.status} ${resp.statusText}`);
+  }
+
+  const data = await resp.json();
+  const text = data?.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join('') || '';
+
+  if (!text) {
+    throw new Error('Không nhận được nội dung từ Gemini.');
+  }
+
+  let jsonString = text.trim();
+  const firstBrace = jsonString.indexOf('{');
+  const lastBrace = jsonString.lastIndexOf('}');
+  if (firstBrace !== -1 && lastBrace !== -1) {
+    jsonString = jsonString.slice(firstBrace, lastBrace + 1);
+  }
+
+  let parsed;
+  try {
+    parsed = JSON.parse(jsonString);
+  } catch (e) {
+    console.error('Raw Gemini text:', text);
+    throw new Error('Không parse được JSON từ phản hồi Gemini.');
+  }
+
+  return {
+    normalizedAddress: parsed.normalizedAddress || ''
+  };
+}
+
+// Nút 1: Chuẩn hóa địa chỉ
+async function handleNormalizeAddress() {
+  const input = document.getElementById('rawAddress');
+  if (!input) return;
+
+  const raw = (input.value || '').trim();
+  if (!raw) {
+    alert('Vui lòng nhập địa chỉ thô KH cung cấp.');
+    input.focus();
+    return;
+  }
+
+  showAIStatus('Đang nhờ Gemini chuẩn hóa địa chỉ, vui lòng chờ...');
+
+  try {
+    const result = await callGeminiNormalize(raw);
+    const addr = result.normalizedAddress || raw;
+    showNormalizedAddress(addr);
+  } catch (err) {
+    console.error(err);
+    showAIError(
+      err.message ||
+        'Không gọi được Gemini để chuẩn hóa địa chỉ. Vui lòng kiểm tra lại API key / kết nối mạng.'
+    );
+  }
+}
+
+// Nút 2: Chuẩn hóa + dự đoán TTKD từ danh sách
+async function handlePredictTTKD() {
+  const input = document.getElementById('rawAddress');
+  if (!input) return;
+
+  const raw = (input.value || '').trim();
+  if (!raw) {
+    alert('Vui lòng nhập địa chỉ để dự đoán Tên TTKD.');
+    input.focus();
+    return;
+  }
+
+  showAIStatus('Đang nhờ Gemini chuẩn hóa địa chỉ và dò TTKD theo danh sách, vui lòng chờ...');
+
+  try {
+    // B1: Chuẩn hóa địa chỉ
+    const normResult = await callGeminiNormalize(raw);
+    const addr = normResult.normalizedAddress || raw;
+
+    // B2: Dò Tên TTKD từ DanhsachCN.xlsx
+    const { ttkdName, reasoning } = findBestTTKD(addr);
+
+    showAIResult({
+      normalizedAddress: addr,
+      ttkdName,
+      reasoning
+    });
+  } catch (err) {
+    console.error(err);
+    showAIError(
+      err.message ||
+        'Không thực hiện được bước chuẩn hóa/dự đoán TTKD. Vui lòng kiểm tra lại API key / DanhsachCN.xlsx.'
+    );
   }
 }
