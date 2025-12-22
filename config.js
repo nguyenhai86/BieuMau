@@ -4,23 +4,23 @@
 const BRANCH_EMAILS = {
   'Sài Gòn': {
     KHCN: '"Nguyen Thi Nha Trang" <trang.nha@mobifone.vn>',
-    KHDN: 'Trang.thithu@mobifone.vn'
+    KHDN: 'vy.dinh@mobifone.vn; yen.lethiphi.khdn@mobifone.vn; trang.nguyen1@mobifone.vn'
   },
   'Gia Định': {
-    KHCN: '"Nguyen Thi Thu Hong (A)" <hong.nthithu@mobifone.vn>',
-    KHDN: '"Tran Tuan Anh" <anh.ttuan@mobifone.vn>'
+    KHCN: 'mai.tu@mobifone.vn',
+    KHDN: 'mai.tu@mobifone.vn (0938101099)'
   },
   'Bến Thành': {
-    KHCN: '"Pham Thi Hong Huyen" <huyen.phamthihong@mobifone.vn>',
-    KHDN: '"Pham Thi Hong Huyen" <huyen.phamthihong@mobifone.vn>'
+    KHCN: '"hong.pthithu@mobifone.vn (902324999); CC cho Pham Thi Hong Huyen <huyen.phamthihong@mobifone.vn>"',
+    KHDN: '"hong.pthithu@mobifone.vn (902324999); CC cho Pham Thi Hong Huyen <huyen.phamthihong@mobifone.vn>"'
   },
   'Gò Vấp': {
-    KHCN: '"Nguyen Thi Thuy Ha" <ha.ntt@mobifone.vn>; CC: "Phan Thi Cam Tu" <tu.ptc@mobifone.vn>',
-    KHDN: '"Huynh Anh Lan" <lan.huynhanh@mobifone.vn>'
+    KHCN: '"ly.nguyen@mobifone.vn (908508788) loan.vungoc@mobifone.vn (0903151515) CC: Nguyen Thi Thuy Ha ha.ntt@mobifone.vn"',
+    KHDN: 'Nguyễn Hồng Phú Nhuận ( mail: nhuan.nhp @mobifone.vn; sdt 901300301)'
   },
   'Thủ Đức': {
-    KHCN: '"Nguyen Nhu Thuy" <thuy.nhu@mobifone.vn>',
-    KHDN: 'lien.ntb@mobifone.vn'
+    KHCN: 'Nguyen Nhu Thuy <thuy.nhu@mobifone.vn>',
+    KHDN: 'lien.ntb@mobifone.vn <lien.ntb@mobifone.vn>'
   },
   'Bình Dương': {
     KHCN: 'Thuý Duy: duy.nguyenthi@mobifone.vn',
